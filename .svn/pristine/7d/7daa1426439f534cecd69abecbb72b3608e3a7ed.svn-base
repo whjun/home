@@ -1,0 +1,131 @@
+<?php
+namespace app\admin\controller;
+use app\admin\controller\Common;
+use think\Db;
+use think\facade\Request;
+use app\admin\model\EquipmentHospitalModel;
+class Equipment extends Common {
+
+    /**
+     * 设备列表
+     */
+    public function equipmentlist(){
+        Cookie('Equipment', request() -> url());
+        $re = config('paginate.list_rows');
+        $region = Db::name('admin_region') -> where('pid',0) -> select();
+        $hospital = Db::name('hospital') -> select();
+        $data = Db::name('device d') -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status')->join('hospital h','d.hospital_id = h.id','LEFT') -> order('d.id asc') -> group('d.id') -> paginate($re, false, array('query' => request() -> param()));
+        // dump($data);
+        $this -> assign('region',$region);
+        $this -> assign('hospital',$hospital);
+        $this -> assign('list',$data);
+        return $this -> fetch();
+    }
+    /**
+     * 设备编辑
+     * @return void
+     */
+    public function editequipment() {
+        $id = input('id');
+        $device_id = input('device_id');
+        $re = config('paginate.list_rows');
+        $data[] = Db::name('device d') ->where('d.id',$id) -> field('d.id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status')->join('hospital h','d.hospital_id = h.id','LEFT') -> order('d.id asc') -> group('d.id') -> find();
+        $hospital = Db::name('hospital') -> select();
+        $lock = Db::name('lock') -> where('decice_id',$device_id) ->order('lock_id asc') -> paginate($re, false, array('query' => request() -> param()));
+        $region = Db::name('admin_region') -> where('pid',0) -> select();
+        $this -> assign("list",$data);
+        $this -> assign("hospital",$hospital);
+        $this -> assign('lock',$lock);
+        $this -> assign('region',$region);
+        return $this -> fetch();
+    }
+    /**
+     * 地区三级联动
+     * @return void
+     */
+    public function region() {
+        $region = Db::name('admin_region') -> select();
+        dump($region);
+    }
+    /**
+     * 保存编辑设备信息
+     * @return void
+     */
+    public function edite() {
+        $data = input('get.');
+        dump($data);
+    }
+    /**
+     * 维修记录
+     * @return void
+     */
+    public function equipmentfault(){
+        Cookie('Fault', request() -> url());
+        $hospital = Db::name('hospital') -> select();
+        // $fault = Db::name() -> 
+        $this -> assign('hospital',$hospital);
+        return $this -> fetch();
+    }
+    /**
+     * 医院管理
+     */
+    public function equipmenthospital() {
+        Cookie('Equipmenthospital', request() -> url());
+        $re = config();
+        $level = input('level', 1);
+        $id = input('id');
+        $parentid = input('parentid', 0);
+        $where = array();
+        if(empty($id)){
+            $where['level'] = $level;
+            $this -> assign('level',$level);
+         }else{
+             $where['level'] = array('gt', $level);
+             $where['pid'] = $id;
+             $this -> assign('level', ++$level);
+         }
+         $list = Db::name('hospital') -> field('h.id,h.hospital_name,h.desc,count(d.hospital_id) count') -> alias('h') -> join('device d','h.id = d.hospital_id','LEFT') -> order('h.id asc') -> group('h.id') -> paginate($re, false, array('query' => request() -> param()));
+         $this -> assign('pid', $parentid);
+         $this -> assign('list', $list);
+        return $this -> fetch();
+    }
+    /**
+     * 添加医院
+     */
+    public function addhospital() {
+        $data = input('post.');
+        $model = new EquipmentHospitalModel();
+        $res = $model -> allowField(true) -> save($data);
+        if($res) {
+            AjaxJson('操作成功', 0, 1, Cookie('Equipmenthospital'));
+        } else {
+            AjaxJson('操作失败');
+        }
+    }
+    /**
+     * 删除医院
+     */
+    public function deletehospital() {
+        $id = input("id");
+        $model = new EquipmentHospitalModel();
+        $res = Db::name('hospital') -> delete($id);
+        if($res) {
+            AjaxJson('删除成功', 0, 1, Cookie('Equipmenthospital'));
+        } else {
+            AjaxJson('删除失败');
+        }
+    }
+    /**
+     * 编辑医院
+     */
+    public function edithospital() {
+        $data = input('post.');
+        $model = new EquipmentHospitalModel();
+        $res = $model -> allowField(true) -> save ($data,array('id'=>$data['id']));
+        if ($res) {
+			AjaxJson('操作成功', 0, 1, Cookie('Equipmenthospital'));
+		} else {
+			AjaxJson('操作失败');
+		}
+    }
+}

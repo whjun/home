@@ -1,0 +1,21 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: wangjinzeng
+ * Date: 2019/3/23
+ * Time: 11:26
+ */
+
+namespace app\admin\controller;
+
+
+use think\Controller;
+
+class Order extends Controller
+{
+    public function orderList()
+    {
+        return $this->fetch();
+    }
+
+}

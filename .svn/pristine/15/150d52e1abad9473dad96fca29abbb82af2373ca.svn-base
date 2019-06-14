@@ -1,0 +1,114 @@
+{include file="./admin-layout/header.html" /}
+<div class="admin-main">
+    <div class="layui-form">
+        <blockquote class="layui-elem-quote" style="font-size:12px;">
+                <div class="layui-form-item" style="margin-bottom: 0px;">
+                        <form method="get" action="{:url('adminlist');}">
+                        <div class="layui-input-inline" style="width:auto;">
+                            <label class="layui-form-label" style="width: 102px">优惠卷名称</label>
+                            <input type="text" class="layui-input" style="display: inline;width:200px" name="filter" id="name" value="" placeholder="输入优惠卷名称搜索" autocomplete="off">
+                            <button class="layui-btn" id="search" type='submit'>
+                                <i class="layui-icon">&#xe615;</i> 查询
+                            </button>
+                        </div>
+                        </form>
+                        {foreach name="menulist" item="val"} {if condition="$val.url eq 'Marketing/addcoupon'"}
+                        <div class="layui-input-inline" style="width: auto;">
+                        <button class="layui-btn layui-btn-normal" onclick="addcoupon()"><i class="layui-icon">&#xe608;</i>{$val.title}</button>
+                        </div>
+                        {/if}{/foreach}
+                    </div>
+        </blockquote>
+        <table class="layui-table">
+            <thead>
+                <th>序号</th>
+                <th>优惠卷名称</th>
+                <th>规则</th>
+                <th>生效时间</th>
+                <th>过期时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+                <tr>
+                    {foreach name="list" item="val"}
+                    <td>{$val.id}</td>
+                    <td>{$val.coupon_name}</td>
+                    <td>应付金额满{$val.max_money}元，优惠金额{$val.cut_money}元</td>
+                    <td>{$val.start_time}</td>
+                    <td>{$val.end_time}</td>
+                    <td>
+                        {if condition="$val.status eq 0"}
+                        未过期
+                        {/if} {if condition="$val.status eq 1"}
+                        已过期
+                        {/if}
+                    </td>
+                    <td>
+                        {foreach name="menulist" item="val"}{if condition="$val.id eq 139"}
+                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="edithospital()">{$val.title}</button>
+                        {/if} {if condition = "$val.id eq 140"}
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete()'>{$val.title}</button> {/if} 
+                        {/foreach}
+                    </td>
+                    {/foreach}
+                </tr>
+            </tbody>
+        </table>
+        <div id="coupon" style="display: none">
+            <input type="hidden" name="id" value="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">优惠券名称：</label>
+                    <input type="text" name="coupon_name" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input" style="width: auto">
+                </div>
+                <div class="layui-inline" style="margin-left: 52px;">
+                        <label class="layui-form-label" style="width: auto">规则:</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+            </div>
+            <!-- <div class="layui-form-item">
+                
+            </div> -->
+        </div>
+        <div class="am-cf">
+            <div class="am-fr over-h" id="rng">
+                {empty name="list"} {else /} {$list|raw} {/empty}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+        });
+    });
+    //添加
+    function addcoupon(){
+        layer.open({
+            type: 1
+            ,title: '添加/编辑'
+            ,area: ['450px', '500px']
+            ,shade: 0
+            ,content: $('#coupon')
+            ,btn: ['确定', '取消']
+            ,shade :0.8
+            ,btnAlign: 'c'
+            ,skin: 'open_class'
+            ,yes: function(layero, index){
+
+            }
+        })
+    }
+</script>

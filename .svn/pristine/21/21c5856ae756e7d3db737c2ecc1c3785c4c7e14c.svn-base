@@ -1,0 +1,343 @@
+<?php
+/**
+ * 公共业务方法
+ * 2018年9月25日14:36:02
+ * @author czg
+ */
+use \think\Db;
+use app\admin\model\UserInfoModel;
+//获取用户功能权限
+function getPower($user_id) {
+	$powerlist = array();
+	$arr = Db::name('admin_power') -> select();
+	foreach ($arr as $k => $val) {
+		$powerlist[$val['id']] = $val;
+	}
+	$powerarr = Db::name('admin_role a') -> join('admin_info b', 'a.id=b.role_id') -> where('b.id', $user_id) -> where('a.status', 0) -> where('b.status', 0) -> value('a.power');
+	//菜单权限
+	$menulist = array();
+	if (empty($powerarr)) {
+		return array('status' => 0, 'msg' => '您没有任何权限，无法登陆');
+	} else {
+		//组成数组格式
+		$powerarr = explode(',', $powerarr);
+		$navs = array();
+		foreach ($powerarr as $v) {
+			$data['title'] = $powerlist[$v]['name'];
+			$data['icon'] = $powerlist[$v]['icon'];
+			$data['href'] = url($powerlist[$v]['url']);
+			$data['url'] = $powerlist[$v]['url'];
+			$data['spread'] = false;
+			if ($powerlist[$v]['level'] == 1) {
+				$navs[$v] = $data;
+			} elseif ($powerlist[$v]['level'] == 2) {
+				$navs[$powerlist[$v]['pid']]['children'][] = $data;
+			} else {
+				$data['id'] = $powerlist[$v]['id'];
+				$menulist[] = $data;
+			}
+		}
+		$navs = array_values($navs);
+		session('navs', json_encode($navs));
+		session('menus', json_encode($menulist));
+		return array('status' => 1);
+	}
+}
+
+/**
+ * 检测字段唯一性
+ * @param table数据表  field 数据字段 value字段值  id
+ * @author czg
+ */
+function checkCode($table, $field, $value, $id = '') {
+	if (empty($id)) {
+		//新增
+		$info = Db::name($table) -> where($field, $value) -> where('status', 0) -> find();
+	} else {
+		//编辑
+		$info = Db::name($table) -> where($field, $value) -> where('id', 'neq', $id) -> where('status', 0) -> find();
+	}
+	if (empty($info)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+//防xss攻击
+function checkXss(&$data, $fields) {
+	$fields = explode(',', $fields);
+	foreach ($fields as $field) {
+		if (!empty($data[$field])) {
+			$data[$field] = htmlspecialchars($data[$field]);
+		}
+	}
+}
+//我的邀请码
+function getCode($n){
+	$chars = ["0","1","2","3","4","5","6","7","8","9",'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+	$x=true;
+	do {
+		$output = "";
+	  	$charsLen = count($chars) - 1;
+		shuffle($chars);
+		for ($i=0; $i<$n; $i++){
+			$output .= $chars[mt_rand(0, $charsLen)];
+		}
+		$user = Db::name('user_info')->where('code',$output)->find();
+		if(empty($user)){
+			$x=false;
+		}
+	} while ($x);
+	return $output;
+}
+//验证用户是否正确存在
+function verify_user($user_id,$token) {
+	if(empty($user_id)){
+		return array('msg'=>'用户ID不能为空','status'=>0);
+	}
+	if(empty($token)){
+		return array('msg'=>'Token不能为空','status'=>0);
+	}
+	$userinfo = UserInfoModel::get(array('id'=>$user_id,'status'=>0));
+	if(empty($userinfo)){
+		return array('msg'=>'该用户不存在','status'=>0);
+	}
+	if($userinfo['token']!=$token){
+		return array('msg'=>'当前账号在别的设备上已登录','status'=>0);
+	}
+	return array('msg'=>'验证通过','status'=>1,'userinfo'=>$userinfo);
+}
+
+function standardType($type){
+	if ($type == 1){
+		return '小修';
+	}elseif($type == 2){
+		return '中修';
+	}elseif($type == 3){
+		return '大修';
+	}
+}
+
+function companyName($id){
+	if ($id == 0){
+		return '无';
+	}
+	$company = \app\common\model\CompanyInfo::get($id);
+	return $company->company_name;
+}
+
+function areaName($id){
+	$areas = cache('areas_name');
+	if (!$areas) {
+		$areas = Db::table('ln_admin_area')->field('id,name')->where('status', 0)->select();
+		cache('areas_name', $areas, 0);
+	}
+	if ($id != 0){
+		foreach ($areas as $a){
+			if ($id == $a['id']){
+				return $a['name'];
+			}
+		}
+	}
+	return '无';
+}
+
+function engineerStatys($type){
+	if ($type == 1){
+		return '未审核';
+	}elseif($type == 2){
+		return '已审核';
+	}elseif($type == 3){
+		return '已驳回';
+	}
+}
+
+function productCategory($type){
+	switch ($type){
+		case 1:
+			return '普通太阳能';
+			break;
+		case 2:
+			return '挂壁太阳能';
+			break;
+		case 3:
+			return '分体式';
+			break;
+		case 4:
+			return '工程';
+			break;
+		case 5:
+			return '空气能';
+			break;
+		case 6:
+			return '电热水器';
+			break;
+		case 7:
+			return '净水机';
+			break;
+	}
+}
+
+function orderCategory($type){
+	switch ($type){
+		case 1:
+			return '安装';
+			break;
+		case 2:
+			return '维修';
+			break;
+	}
+}
+
+function depositStatus($type){
+	switch ($type){
+		case 0:
+			return '提现中';
+			break;
+		case 1:
+			return '通过';
+			break;
+		case 2:
+			return '拒绝';
+			break;
+	}
+}
+
+function classifyName($id){
+	$classifies = cache('classify_name');
+	if (!$classifies) {
+		$classifies = \app\common\model\AccessoryClassify::where('status',0)->select();
+		cache('classify_name', $classifies, 0);
+	}
+	if ($id != 0){
+		foreach ($classifies as $c){
+			if ($id == $c['id']){
+				return $c['classify_name'];
+			}
+		}
+	}
+	return '无';
+}
+
+function getMonthrange($start,$end){
+	$time1 = strtotime($start); // 自动为00:00:00 时分秒 两个时间之间的年和月份
+	$time2 = strtotime($end);
+
+	$monarr = array();
+	$monarr[] = $start; // 当前月;
+	while( ($time1 = strtotime('+1 month', $time1)) <= $time2){
+		$monarr[] = date('Y-m',$time1); // 取得递增月;
+	}
+	return $monarr;
+}
+
+function importExcel($filename){
+	if (!file_exists($filename)) {
+		AjaxJson('上传失败,没有文件');
+	}
+	$extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+	if ($extension == 'xlsx') {
+		$reader = new \PHPExcel_Reader_Excel2007();
+		$excel = $reader->load($filename);
+	} else if ($extension == 'xls') {
+		$reader = new \PHPExcel_Reader_Excel5();
+		$excel = $reader->load($filename);
+	} else if ($extension == 'csv') {
+		$PHPReader = new \PHPExcel_Reader_CSV();
+		//默认输入字符集
+		$PHPReader->setInputEncoding('GBK');
+		//默认的分隔符
+		$PHPReader->setDelimiter(',');
+		//载入文件
+		$excel = $PHPReader->load($filename);
+	}
+	//读取第一张表
+	$sheet = $excel->getSheet(0);
+	//获取总行数
+	$row_num = $sheet->getHighestRow();
+	//获取总列数
+	$col_num = \PHPExcel_Cell::columnIndexFromString($sheet->getHighestColumn());
+	$data = []; //数组形式获取表格数据
+	for ($col = 0; $col <= $col_num; $col++) {
+		//从第二行开始，去除表头（若无表头则从第一行开始）
+		for ($row = 1; $row <= $row_num; $row++) {
+			$data[$row - 1][] = $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($col) . $row)->getValue();
+		}
+	}
+	return $data;
+}
+function guaranteeTimeName($type){
+	if ($type == 1){
+		return '保修2年';
+	}elseif($type == 2){
+		return '保修3年';
+	}elseif($type == 3){
+		return '保修4年';
+	}elseif($type == 4){
+		return '保修5年';
+	}elseif($type == 5){
+		return '保修6年';
+	}elseif($type == 6){
+		return '保修7年';
+	}elseif($type == 7){
+		return '保修8年';
+	}elseif($type == 8){
+		return '保修10年';
+	}
+	return '无';
+}
+
+function guaranteeTimeType($name){
+	if ($name == '保修2年'){
+		return 1;
+	}elseif($name == '保修3年'){
+		return 2;
+	}elseif($name == '保修4年'){
+		return 3;
+	}elseif($name == '保修5年'){
+		return 4;
+	}elseif($name == '保修6年'){
+		return 5;
+	}elseif($name == '保修7年'){
+		return 6;
+	}elseif($name == '保修8年'){
+		return 7;
+	}elseif($name == '保修10年'){
+		return 8;
+	}
+	return 0;
+
+}
+
+function exportExcel($nameArray,$list,$dataArray,$tableName){
+	$objPHPExcel = new \PHPExcel();
+	$column = 'A';
+	$row = 1;
+	foreach ($nameArray as $name){
+		$objPHPExcel->getActiveSheet()->setCellValue($column.$row, $name);
+		foreach ($list as $i=>$item){
+			$itemColumn = 'A';
+			foreach ($dataArray as $k=>$p){
+				$objPHPExcel->getActiveSheet()->setCellValue($itemColumn . ($i+2), $item[$p]);
+				$itemColumn++;
+			}
+		}
+		$column++;
+	}
+	/*--------------下面是设置其他信息------------------*/
+	$objPHPExcel->getActiveSheet()->setTitle($tableName);      //设置sheet的名称
+	$objPHPExcel->setActiveSheetIndex(0);                   //设置sheet的起始位置
+	$objPHPExcel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+	$objPHPExcel->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+	$objPHPExcel->getDefaultStyle()->getAlignment()->setWrapText(true);
+	$objPHPExcel->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+	$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');   //Excel2003通过PHPExcel_IOFactory的写函数将上面数据写出来
+	$PHPWriter = \PHPExcel_IOFactory::createWriter( $objPHPExcel,"Excel2007"); //Excel2007
+	header('Content-Disposition: attachment;filename="'.$tableName.'.xlsx"');
+	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+	$PHPWriter->save("php://output"); //表示在$path路径下面生成demo.xlsx文件
+}
+
+?>

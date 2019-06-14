@@ -1,0 +1,181 @@
+{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+	
+	.bigImg {
+		display: none;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.3);
+		left: 0;
+		top: 0;
+		z-index: 1000;
+		position: fixed;
+	}
+</style>
+<div class="admin-main">
+	<!--点击图片放大-->
+	<div class="bigImg pos-fix">
+		<img src="">
+	</div>
+	<!--点击图片放大结束-->
+	<div class="layui-form">
+		<blockquote class="layui-elem-quote" style="font-size: 12px;">
+				<div class="layui-form-item" style="margin-bottom: 0px;">
+					<form method="get" action="{:url('rolelist');}">
+						<div class="layui-input-inline" style="width:auto;">
+							<input type="text" class="layui-input" style="display: inline;width:200px" name="filter" id="name" value="{$filter}" placeholder="输入角色名称" autocomplete="off">
+							<button class="layui-btn" id="search" type='submit'>
+								<i class="layui-icon">&#xe615;</i> 查询
+							</button>
+						</div>
+					</form>
+						{foreach name="menulist" item="val"} {if condition="$val.id eq 7"}
+						<div class="layui-input-inline" style="width: auto;">
+						<a class="layui-btn layui-btn-normal" href='{:url("addrole")}'><i class="layui-icon">&#xe608;</i>{$val.title}</a>
+						</div>
+						{/if} {if condition="$val.url eq 'Admin/deleteroles'"}
+						<div class="layui-input-inline" style="width: auto;">
+							<button class="layui-btn layui-btn-danger" onclick="deleteroles()">{$val.title}</button>
+						</div>
+						{/if}{/foreach}
+				</div>
+		</blockquote>
+		<table class="layui-table" id="list-table">
+			<thead>
+				<tr>
+					<th><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+					<th>序号</th>
+					<th>角色名称</th>
+					<th>描述</th>
+					<th>创建时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name='list' id='data'}
+				<tr>
+					<td><input type="checkbox" lay-filter="perselector" lay-skin="primary" data-id="{$data.id}"></td>
+					<td>{$data.ids}</td>
+					<td>{$data.name}</td>
+					<td>{$data.desc}</td>
+					<td>{$data.create_time}</td>
+					<td>
+						{foreach name="menulist" item="val"} 
+							{if condition="$val.id eq 8"}
+							<a class="layui-btn layui-btn-xs layui-btn-normal" href='{:url("editrole",["id"=>$data.id])}'>{$val.title}</a>
+							{/if}
+							{if condition="$val.id eq 9"}
+							<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$data.id})'>{$val.title}</button>
+							{/if}
+						{/foreach}
+					</td>
+				</tr>
+				{/volist}
+			</tbody>
+		</table>
+
+	</div>
+	<div class="am-cf">
+		<div class="am-fr over-h" id="rng">
+			{empty name="list"} {else /} {$list->render()} {/empty}
+		</div>
+	</div>
+</div>
+<script>
+	layui.use(['layer', 'form'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			layer = layui.layer; //独立版的layer无需执行这一句
+		form.on('checkbox(allChoose)', function(data) {
+			var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+			child.each(function(index, item) {
+				item.checked = data.elem.checked;
+			});
+			form.render('checkbox');
+		});
+	});
+	//批量删除
+	function deleteroles() {
+		var noticeids = [];
+		var length = $("input[lay-filter='perselector']:checked").length;
+		if(length == 0) {
+			layer.msg('请勾选列表');
+			return false;
+		} else {
+			$("input[lay-filter='perselector']:checked").each(function() {
+				noticeids.push($(this).attr('data-id'));
+			})
+			layer.confirm('您确定要删除吗?', {
+				icon: 3,
+				title: '温馨提示'
+			}, function(index) {
+				$.ajax({
+					url: "{:url('deleteroles')}",
+					type: "POST",
+					data: {
+						ids: noticeids,
+					}
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+				layer.close(index);
+			})
+		}
+	}
+	//审核
+	function Delete(id) {
+		layer.confirm(
+			'您确定要删除吗?', 
+		{
+			icon: 3,
+			title: '温馨提示'
+		}, function(index) {
+			$.ajax({
+				url: "{:url('deleterole')}" + '?id=' + id,
+				type: "GET"
+			}).done(function(data) {
+				if(data.result == 0) {
+					layer.msg(data.message, {
+						icon: 1,
+						time: 3000
+					}, function() {
+						location.href = data.url;
+					});
+				} else {
+					layer.msg(data.message, {
+						icon: 2,
+						time: 3000
+					});
+				}
+			}).error(function(data) {
+				layer.msg('错误', {
+					icon: 2,
+					content: '服务器错误'
+				});
+			});
+			layer.close(index);
+		});
+	}
+</script>

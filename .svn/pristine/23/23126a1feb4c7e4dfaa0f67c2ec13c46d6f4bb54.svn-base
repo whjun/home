@@ -1,0 +1,68 @@
+{include file="./admin-layout/header.html" /}
+<div class="admin-main">
+    <div class="layui-form">
+        <blockquote class="layui-elem-quote" style="font-size: 12px;">
+            <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 80px;">
+                <form method="get" action="">
+                    <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                        <label class="layui-form-label">微信ID</label>
+                        <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入微信ID搜索" autocomplete="off">
+                    </div>
+                    <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                        <label class="layui-form-label">支付宝ID</label>
+                        <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入支付宝ID搜索" autocomplete="off">
+                    </div>
+                    <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                        <label class="layui-form-label">押金状态</label>
+                        <div class="layui-input-block" style="width: 101px;margin-left: 80px;">
+                            <select name="city" lay-verify="">
+                                <option value="">全部</option>
+                                <option value="0">已缴纳</option>
+                                <option value="1">未缴纳</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="layui-btn layui-btn-normal" style="margin-left: 30px;"><i class="layui-icon">&#xe615;</i> 查询</button>
+                </form>
+            </div>
+        </blockquote>
+        <table class="layui-table">
+            <thead>
+                <th>用户编号</th>
+                <th>用户昵称</th>
+                <th>微信ID</th>
+                <th>支付宝ID</th>
+                <th>押金状态</th>
+                <th>累计消费</th>
+                <th>启用</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="yyy" lay-skin="switch" lay-text="ON|OFF" checked>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+        });
+    });
+</script>

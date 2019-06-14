@@ -1,0 +1,24 @@
+<?php
+namespace app\admin\controller;
+use app\admin\controller\Common;
+use think\Db;
+use think\facade\Request;
+class Marketing extends Common{
+    /**
+     * 优惠券
+     */
+    public function marketingcoupon(){
+        Cookie('Coupon', request() -> url());
+        $re = config('paginate.list_rows');
+        $data = Db::name('coupon') -> order('id asc') ->paginate($re, false, array('query' => request() -> param()));
+        $this -> assign("list",$data);
+        return $this -> fetch();
+
+    }
+    /**
+     * 优惠卷添加
+     */
+    public function addcoupon(){
+        return $this -> fetch();
+    }
+}

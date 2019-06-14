@@ -1,0 +1,255 @@
+<?php
+namespace wxpay;
+class wxpay {
+	/**
+	 * 基础函数
+	 * @access public
+	 */
+	public function __construct() {
+		$this -> appid = 'wxa72808045ca703b2';
+		//公众号appid
+		$this -> mch_id = '1509333271';
+		//商户号
+		$this -> mch_key = 'adineindifkvdkifmidmfkvclkickcid';
+		//商户密钥
+		$this -> notify_url = 'http://'.$_SERVER['HTTP_HOST'].'/public/index.php/v1/wx_notify';
+		//支付回调地址
+		$this -> pemcert = EXTEND_PATH . 'wxpay/key/apiclient_cert.pem';
+		$this -> pemkey = EXTEND_PATH . 'wxpay/key/apiclient_key.pem';
+		//退款证书
+	}
+
+	/*
+	 * 微信支付
+	 */
+	public function WxChatPay($out_trade_no, $total_fee, $openid) {
+		$param = array();
+		$param['appid'] = $this -> appid;
+		//公众号appid
+		$param['mch_id'] = $this -> mch_id;
+		//商户号
+		$param['nonce_str'] = $this -> getNonceStr();
+		//随机字符串
+		$param['body'] = '艺术品订单-' . $out_trade_no;
+		$param['out_trade_no'] = $out_trade_no;
+//		$param['total_fee'] = $total_fee;
+		$param['total_fee'] = 1;
+		//订单总金额  单位为分
+		$param['spbill_create_ip'] = $this -> getIp();
+		$param['notify_url'] = $this -> notify_url;
+		//支付成功回调地址
+		$param['trade_type'] = 'JSAPI';
+		//公众号支付
+		$param['openid'] = $openid;
+		//用户唯一标识
+		$param['sign'] = $this -> MakeSign($param, $this -> mch_key);
+		//生成签名
+		$xml = $this -> ToXml($param);
+		$url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
+		$response = $this -> postXmlCurl($xml, $url);
+		$result = $this -> FromXml($response);
+		return $result;
+	}
+
+	/*
+	 * 微信退款
+	 *
+	 */
+	public function WxRefund($transaction_id, $refund_sn, $total_fee, $refund_fee) {
+		$param = array();
+		$param['appid'] = $this -> appid;
+		//公众号appid
+		$param['mch_id'] = $this -> mch_id;
+		//商户号
+		$param['nonce_str'] = $this -> getNonceStr();
+		//随机字符串
+		$param['transaction_id'] = $transaction_id;
+		$param['out_refund_no'] = $refund_sn;
+//		$param['total_fee'] = $total_fee;
+//		$param['refund_fee'] = $refund_fee;
+		$param['total_fee'] = 1;
+		$param['refund_fee'] = 1;
+		$param['sign'] = $this -> MakeSign($param, $this -> mch_key);
+		//生成签名
+		$url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
+		$xml = $this -> ToXml($param);
+		$response = $this -> postXmlSSLCurl($xml, $url);
+		$result = $this -> FromXml($response);
+		return $result;
+	}
+
+	/**
+	 *
+	 * 产生随机字符串，不长于32位
+	 * @param int $length
+	 * @return 产生的随机字符串
+	 */
+	public function getNonceStr($length = 32) {
+		$chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+		$str = "";
+		for ($i = 0; $i < $length; $i++) {
+			$str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+		}
+		return $str;
+	}
+
+	/*
+	 * 签名算法
+	 */
+	public function MakeSign($input, $mch_key) {
+		//签名步骤一：按字典序排序参数
+		ksort($input);
+		$string = "";
+		foreach ($input as $k => $v) {
+			if ($k != "sign" && $v != "" && !is_array($v)) {
+				$string .= $k . "=" . $v . "&";
+			}
+		}
+		$string = trim($string, "&");
+
+		//签名步骤二：在string后加入KEY
+		$string = $string . "&key=" . $mch_key;
+		//签名步骤三：MD5加密
+		$string = md5($string);
+		//签名步骤四：所有字符转为大写
+		$result = strtoupper($string);
+		return $result;
+	}
+
+	/*
+	 * 获取用户ip
+	 */
+	public function getIp() {
+		if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown"))
+			$ip = getenv("HTTP_CLIENT_IP");
+		else if (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown"))
+			$ip = getenv("HTTP_X_FORWARDED_FOR");
+		else if (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown"))
+			$ip = getenv("REMOTE_ADDR");
+		else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown"))
+			$ip = $_SERVER['REMOTE_ADDR'];
+		else
+			$ip = "unknown";
+		return ($ip);
+	}
+
+	/*
+	 * 数组转xml
+	 */
+	public function ToXml($input) {
+		if (!is_array($input) || count($input) <= 0) {
+			throw new WxPayException("数组数据异常！");
+		}
+
+		$xml = "<xml>";
+		foreach ($input as $key => $val) {
+			if (is_numeric($val)) {
+				$xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+			} else {
+				$xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
+			}
+		}
+		$xml .= "</xml>";
+		return $xml;
+	}
+
+	public function postXmlCurl($xml, $url, $useCert = false, $second = 30) {
+		$ch = curl_init();
+		//设置超时
+		curl_setopt($ch, CURLOPT_TIMEOUT, $second);
+
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		//严格校验
+		//设置header
+		curl_setopt($ch, CURLOPT_HEADER, FALSE);
+		//要求结果为字符串且输出到屏幕上
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+		//post提交方式
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+		//运行curl
+		$data = curl_exec($ch);
+		//返回结果
+		if ($data) {
+			curl_close($ch);
+			return $data;
+		} else {
+			$error = curl_errno($ch);
+			curl_close($ch);
+			return "curl出错，错误码:$error";
+		}
+	}
+
+	public function postXmlSSLCurl($xml, $url, $second = 30) {
+		$ch = curl_init();
+		//设置超时
+		curl_setopt($ch, CURLOPT_TIMEOUT, $second);
+
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		//严格校验
+		//设置header
+		curl_setopt($ch, CURLOPT_HEADER, FALSE);
+		//要求结果为字符串且输出到屏幕上
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+		//设置证书
+
+		//使用证书：cert 与 key 分别属于两个.pem文件
+		//默认格式为PEM，可以注释
+		curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'PEM');
+		curl_setopt($ch, CURLOPT_SSLCERT, $this -> pemcert);
+		//默认格式为PEM，可以注释
+		curl_setopt($ch, CURLOPT_SSLKEYTYPE, 'PEM');
+		curl_setopt($ch, CURLOPT_SSLKEY, $this -> pemkey);
+
+		//post提交方式
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+		//运行curl
+		$data = curl_exec($ch);
+		//返回结果
+		if ($data) {
+			curl_close($ch);
+			return $data;
+		} else {
+			$error = curl_errno($ch);
+			curl_close($ch);
+			return "curl出错，错误码:$error";
+		}
+	}
+
+	/*
+	 * xml转数组
+	 */
+	public function FromXml($xml) {
+		if (!$xml) {
+			throw new WxPayException("xml数据异常！");
+		}
+		//将XML转为array
+		//禁止引用外部xml实体
+		libxml_disable_entity_loader(true);
+		$values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+		return $values;
+	}
+
+	/*
+	 * 签名验证
+	 */
+	public function CheckSign($data) {
+		$sign = $data['sign'];
+		unset($data['sign']);
+		$result = $this -> MakeSign($data, $this -> mch_key);
+		if ($sign == $result) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+}
+?>

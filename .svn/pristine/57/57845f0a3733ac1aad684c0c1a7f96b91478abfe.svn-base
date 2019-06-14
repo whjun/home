@@ -1,0 +1,202 @@
+{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+	.layui-form-switch i{
+		width:18px;
+		height: 18px;
+		top:1px;
+	}
+	.layui-form-switch{
+		width:40px;
+		margin-top: 0px;
+	}
+</style>
+<div class="admin-main">
+	<div class="layui-form">
+		<blockquote class="layui-elem-quote" style="font-size: 12px;">
+				<div class="layui-form-item" style="margin-bottom: 0px;">
+					<form method="get" action="{:url('adminlist');}">
+					<div class="layui-input-inline" style="width:auto;">
+						<input type="text" class="layui-input" style="display: inline;width:200px" name="filter" id="name" value="{$filter}" placeholder="输入管理员账号|姓名|角色" autocomplete="off">
+						<button class="layui-btn" id="search" type='submit'>
+							<i class="layui-icon">&#xe615;</i> 查询
+						</button>
+					</div>
+					</form>
+					{foreach name="menulist" item="val"} {if condition="$val.url eq 'Admin/adminadd'"}
+					<div class="layui-input-inline" style="width: auto;">
+					<a class="layui-btn layui-btn-normal" href='{:url("adminadd")}'><i class="layui-icon">&#xe608;</i>{$val.title}</a>
+					</div>
+					{/if} {if condition="$val.url eq 'Admin/deleteadmins'"}
+					<div class="layui-input-inline" style="width: auto;">
+						<button class="layui-btn layui-btn-danger" onclick="deleteadmins()">{$val.title}</button>
+					</div>
+					{/if}{/foreach}
+				</div>
+		</blockquote>
+		<table class="layui-table" id="list-table">
+			<thead>
+				<tr>
+					<th><input type="checkbox" lay-skin="primary" lay-filter="allChoose"></th>
+					<th>序号</th>
+					<th>用户ID</th>
+					<th>账号</th>
+					<th>昵称</th>
+					<th>角色</th>
+					<th>启用</th>
+					<th>创建时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="viewer">
+				{volist name='list' id='data'}
+				<tr>
+					<td><input type="checkbox" lay-filter="perselector" lay-skin="primary" data-id="{$data.id}"></td>
+					<td>{$data.ids}</td>
+					<td>{$data.id}</td>
+					<td>{$data.username}</td>
+					<td>{$data.nickname}</td>
+					<td>{$data.name}</td>
+					<td><input type="checkbox" value="{$data.is_use}" data-id="{$data.id}" {if condition="$data.is_use eq 0"} checked{/if} name="is_use" lay-skin="switch" lay-filter="switchTest"></td>
+					<td>{$data.create_time}</td>
+					<td>
+						{foreach name="menulist" item="val"} 
+							{if condition="$val.url eq 'Admin/adminedit'"}
+							<a class="layui-btn layui-btn-xs layui-btn-normal" href='{:url("adminedit",["id"=>$data.id])}'>{$val.title}</a>
+							{/if}
+							{if condition="$val.url eq 'Admin/admindel'"}
+							<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$data.id})'>{$val.title}</button>
+							{/if}
+						{/foreach}
+					</td>
+				</tr>
+				{/volist}
+			</tbody>
+		</table>
+
+	</div>
+	<div class="am-cf">
+		<div class="am-fr over-h" id="rng">
+			{empty name="list"} {else /} {$list|raw} {/empty}
+		</div>
+	</div>
+</div>
+<script>
+	layui.use(['layer', 'form'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			layer = layui.layer; //独立版的layer无需执行这一句
+		form.on('checkbox(allChoose)', function(data) {
+			var child = $(data.elem).parents('table').find('tbody input[lay-filter="perselector"]');
+			child.each(function(index, item) {
+				item.checked = data.elem.checked;
+			});
+			form.render('checkbox');
+		});
+		//图片预览
+		$('.viewer').viewer();
+		form.on('switch(switchTest)', function(data){
+			var id = $(data.elem).attr('data-id');
+			var is_use = data.elem.checked==true?0:1;
+			$.ajax({
+				url: "{:url('changeStatus')}?id="+id+"&is_use="+is_use,
+				type: "GET",
+			}).done(function(data) {
+				if(data.result == 0) {
+					layer.msg(data.message);
+				} else {
+					layer.msg(data.message, {
+						icon: 2,
+						time: 3000
+					});
+				}
+			}).error(function(data) {
+				layer.msg('错误', {
+					icon: 2,
+					content: '服务器错误'
+				});
+			});
+		});
+	});
+	//批量删除
+	function deleteadmins() {
+		var noticeids = [];
+		var length = $("input[lay-filter='perselector']:checked").length;
+		if(length == 0) {
+			layer.msg('请勾选列表');
+			return false;
+		} else {
+			$("input[lay-filter='perselector']:checked").each(function() {
+				noticeids.push($(this).attr('data-id'));
+			})
+			layer.confirm('您确定要删除吗?', {
+				icon: 3,
+				title: '温馨提示'
+			}, function(index) {
+				$.ajax({
+					url: "{:url('deleteadmins')}",
+					type: "POST",
+					data: {
+						ids: noticeids,
+					}
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+				layer.close(index);
+			})
+		}
+	}
+	//审核
+	function Delete(id) {
+		layer.confirm(
+			'您确定要删除吗?', 
+		{
+			icon: 3,
+			title: '温馨提示'
+		}, function(index) {
+			$.ajax({
+				url: "{:url('admindel')}" + '?id=' + id,
+				type: "GET"
+			}).done(function(data) {
+				if(data.result == 0) {
+					layer.msg(data.message, {
+						icon: 1,
+						time: 3000
+					}, function() {
+						location.href = data.url;
+					});
+				} else {
+					layer.msg(data.message, {
+						icon: 2,
+						time: 3000
+					});
+				}
+			}).error(function(data) {
+				layer.msg('错误', {
+					icon: 2,
+					content: '服务器错误'
+				});
+			});
+			layer.close(index);
+		});
+	}
+</script>

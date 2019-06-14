@@ -1,0 +1,194 @@
+{include file="./admin-layout/header.html" /}
+<div class="admin-main">
+	<div class="layui-form">
+		<blockquote class="layui-elem-quote" style="font-size: 12px;">
+			<form method="get" action="{:url('menulist');}">
+				<div class="layui-form-item" style="margin-bottom: 0px;">
+					{foreach name="menulist" item="val"} {if condition="$val.id eq 109"}
+					<div class="layui-input-inline" style="width:auto;">
+						<a class="layui-btn layui-btn-normal" href='{:url("addmenu")}'><i class="layui-icon">&#xe608;</i>{$val.title}</a>
+					</div>
+					{/if} {/foreach}
+				</div>
+			</form>
+		</blockquote>
+		<table class="layui-table" id="list-table">
+			<thead>
+				<tr>
+					<th style="text-align: center;" style="width:300px;">菜单名称</th>
+					<th style="text-align: center;">控制器方法</th>
+					<th style="text-align: center;">状态</th>
+					<th style="text-align: center;">操作</th>
+				</tr>
+			</thead>
+			<tbody class="viewer">
+				{volist name='list' id='data'}
+				<tr class="{$data.level}" id="{$data.level}_{$data.id}">
+					<td style="padding-left:<?php echo ($data['level'] * 5); ?>em">
+						{if condition="$data.child"}
+						<span class="glyphicon glyphicon-plus btn-warning" style="padding:2px;" id="icon_{$data.level}_{$data.id}" aria-hidden="false" onclick="rowClicked(this)"></span>&nbsp; {/if}
+						<span>{$data.name}</span>
+					</td>
+					<td style="text-align: center;">{$data.url}</td>
+					<td style="text-align: center;">{php}echo $data['status']==0 ? '显示' : '隐藏';{/php}</td>
+					<td style="text-align: center;">
+						<a href='{:url("addmenu",["pid" => $data.id])}' class="layui-btn layui-btn-xs layui-btn">添加子菜单</a>
+						{foreach name="menulist" item="val"}
+						{if condition="$val.id eq 110"}
+						<a class="layui-btn layui-btn-xs layui-btn-normal" href='{:url("editmenu",["id" => $data.id])}'>编辑</a>
+						{/if}
+						{if condition="$val.id eq 111"}
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$data.id})'>删除</button>
+						{/if}{/foreach}
+					</td>
+				</tr>
+				{foreach name="data.child" item="second"}
+				<tr {if condition="$second.level eq 2" }style="display:none;" {/if} class="{$second.level}" id="{$second.level}_{$second.id}">
+					<td style="padding-left:<?php echo ($second['level'] * 5); ?>em">
+						{if condition="$second.child"}
+						<span class="glyphicon glyphicon-plus btn-warning" style="padding:2px;" id="icon_{$second.level}_{$second.id}" aria-hidden="false" onclick="rowClicked(this)"></span>&nbsp; {/if}
+						<span>{$second.name}</span>
+					</td>
+					<td style="text-align: center;">{$second.url}</td>
+					<td style="text-align: center;">{php}echo $second['status']==0 ? '显示' : '隐藏';{/php}</td>
+					<td style="text-align: center;">
+						<a href='{:url("addmenu",["pid" => $second.id])}' class="layui-btn layui-btn-xs layui-btn">添加子菜单</a>
+						{foreach name="menulist" item="val"}
+						{if condition="$val.id eq 110"}
+						<a class="layui-btn layui-btn-xs layui-btn-normal" href='{:url("editmenu",["id" => $second.id])}'>编辑</a>
+						{/if}
+						{if condition="$val.id eq 111"}
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$second.id})'>删除</button>
+						{/if}{/foreach}
+					</td>
+				</tr>
+				{foreach name="second.child" item="third"}
+				<tr {if condition="$third.level eq 3" }style="display:none;" {/if} class="{$third.level}" id="{$third.level}_{$third.id}">
+					<td style="padding-left:<?php echo ($third['level'] * 5); ?>em">
+						<span>{$third.name}</span>
+					</td>
+					<td style="text-align: center;">{$third.url}</td>
+					<td style="text-align: center;">{php}echo $third['status']==0 ? '显示' : '隐藏';{/php}</td>
+					<td style="text-align: center;">
+						{foreach name="menulist" item="val"} {if condition="$val.id eq 110"}
+						<a class="layui-btn layui-btn-xs layui-btn-normal" href='{:url("editmenu",["id" => $third.id])}'>编辑</a>
+						{/if}
+						{if condition="$val.id eq 111"}
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$third.id})'>删除</button>
+						{/if}{/foreach}
+					</td>
+				</tr>
+				{/foreach} {/foreach} {/volist}
+			</tbody>
+		</table>
+
+	</div>
+	<div class="am-cf">
+		<div class="am-fr over-h" id="rng">
+			{empty name="list"} {else /} {$list|raw} {/empty}
+		</div>
+	</div>
+	<script>
+		layui.use('layer', function() { //独立版的layer无需执行这一句
+			var $ = layui.jquery,
+				layer = layui.layer; //独立版的layer无需执行这一句
+
+		});
+		//图片预览
+		$('.viewer').viewer();
+		window.rowClicked = function(obj) {
+			span = obj;
+
+			obj = obj.parentNode.parentNode;
+
+			var tbl = document.getElementById("list-table");
+
+			var lvl = parseInt(obj.className);
+			var fnd = false;
+
+			var sub_display = $(span).hasClass('glyphicon-minus') ? 'none' : '' ? 'block' : 'table-row';
+			if(sub_display == 'none') {
+				$(span).removeClass('glyphicon-minus btn-info');
+				$(span).addClass('glyphicon-plus btn-warning');
+			} else {
+				$(span).removeClass('glyphicon-plus btn-info');
+				$(span).addClass('glyphicon-minus btn-warning');
+			}
+
+			for(i = 0; i < tbl.rows.length; i++) {
+				var row = tbl.rows[i];
+
+				if(row == obj) {
+					fnd = true;
+				} else {
+
+					if(fnd == true) {
+						var cur = parseInt(row.className);
+						var icon = 'icon_' + row.id;
+						if(cur > lvl) {
+							row.style.display = sub_display;
+
+							if(sub_display != 'none') {
+								var iconimg = document.getElementById(icon);
+								$(iconimg).removeClass('glyphicon-plus btn-info');
+								$(iconimg).addClass('glyphicon-minus btn-warning');
+							} else {
+								$(iconimg).removeClass('glyphicon-minus btn-info');
+								$(iconimg).addClass('glyphicon-plus btn-warning');
+							}
+						} else {
+							fnd = false;
+							break;
+						}
+					}
+				}
+			}
+
+			for(i = 0; i < obj.cells[0].childNodes.length; i++) {
+
+				var imgObj = obj.cells[0].childNodes[i];
+				if(imgObj.tagName == "IMG") {
+
+					if($(imgObj).hasClass('glyphicon-plus btn-info')) {
+						$(imgObj).removeClass('glyphicon-plus btn-info');
+						$(imgObj).addClass('glyphicon-minus btn-warning');
+					} else {
+						$(imgObj).removeClass('glyphicon-minus btn-warning');
+						$(imgObj).addClass('glyphicon-plus btn-info');
+					}
+				}
+			}
+		}
+		//删除
+		function Delete(id) {
+			layer.confirm('您确定要删除吗?', {
+				icon: 3,
+				title: '温馨提示'
+			}, function(index) {
+				$.ajax({
+					url: "{:url('delmenu')}" + '?id=' + id,
+					type: "GET"
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+				layer.close(index);
+			});
+		}
+	</script>

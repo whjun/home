@@ -1,0 +1,115 @@
+{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+	.layui-form-switch i{
+		width:18px;
+		height: 18px;
+		top:1px;
+	}
+	.layui-form-switch{
+		width:40px;
+		margin-top: 0px;
+	}
+</style>
+<div class="admin-main">
+    <div class="layui-form">
+        <blockquote class="layui-elem-quote" style="font-size: 12px;">
+            <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 80px;">
+                <form method="get" action="{:url('userlist')}">
+                    <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                        <label class="layui-form-label">微信ID</label>
+                        <input type="text" class="layui-input" value="{notempty name='oppen_id'}{$oppen_id}{/notempty}" style="width:200px" name="oppen_id" id="name" placeholder="请输入微信ID搜索" autocomplete="off">
+                    </div>
+                    <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                        <label class="layui-form-label">支付宝ID</label>
+                        <input type="text" class="layui-input" style="width:200px" name="ali_user_id" id="name" value="{notempty name='ali_user_id'}{$ali_user_id}{/notempty}" placeholder="请输入支付宝ID搜索" autocomplete="off">
+                    </div>
+                    <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                        <label class="layui-form-label" style="width: auto">押金状态</label>
+                        <div class="layui-input-block" style="width: 101px;margin-left: 80px;">
+                            <select name="balance" lay-verify="">
+                                <option value="">全部</option>
+                                <option value="1">已缴纳</option>
+                                <option value="2">未缴纳</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="layui-btn layui-btn-normal" style="margin-left: 30px;"><i class="layui-icon">&#xe615;</i> 查询</button>
+                </form>
+            </div>
+        </blockquote>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>用户编号</th>
+                    <th>用户昵称</th>
+                    <th>微信ID</th>
+                    <th>支付宝ID</th>
+                    <th>押金状态</th>
+                    <th>累计消费</th>
+                    <th>启用</th>
+                </tr>
+            </thead>
+            <tbody class="viewer">
+                {volist name="list" id="val"}
+                <tr>
+                    <td>{$val.id}</td>
+                    <td>{$val.nike_name}</td>
+                    <td>{if condition="$val.oppen_id eq 0"}/{else /}{$val.oppen_id}{/if}</td>
+                    <td>{if condition="$val.ali_user_id eq 0"}/{else /}{$val.ali_user_id}{/if}</td>
+                    <td>{if condition="$val.balance eq 0.00"}<span style='color: red'>未缴纳</span>{else /}<span>已缴纳</span>{/if}</td>
+                    <td>{if condition="$val.consumption eq NULL"}0{else /}{$val.consumption}{/if}</td>
+                    <td>
+                        <input type="checkbox" value="{$val.is_defriend}" data-id="{$val.id}" name="is_defriend" {if condition="$val.is_defriend eq 0"} checked{/if} lay-skin="switch" lay-filter="switchTest">
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+    <div class="am-cf">
+        <div class="am-fr over-h" id="rng">
+            {empty name="list"} {else /} {$list|raw} {/empty}
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer', 'form'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			layer = layui.layer; //独立版的layer无需执行这一句
+		form.on('checkbox(allChoose)', function(data) {
+			var child = $(data.elem).parents('table').find('tbody input[lay-filter="perselector"]');
+			child.each(function(index, item) {
+				item.checked = data.elem.checked;
+			});
+			form.render('checkbox');
+		});
+		//图片预览
+		$('.viewer').viewer();
+		form.on('switch(switchTest)', function(data){
+			var id = $(data.elem).attr('data-id');
+			var is_defriend = data.elem.checked==true?0:1;
+			$.ajax({
+				url: "{:url('changeStatus')}?id="+id+"&is_defriend="+is_defriend,
+				type: "GET",
+			}).done(function(data) {
+				if(data.result == 0) {
+					layer.msg(data.message);
+				} else {
+					layer.msg(data.message, {
+						icon: 2,
+						time: 3000
+					});
+				}
+			}).error(function(data) {
+				layer.msg('错误', {
+					icon: 2,
+					content: '服务器错误'
+				});
+			});
+		});
+	});
+</script>

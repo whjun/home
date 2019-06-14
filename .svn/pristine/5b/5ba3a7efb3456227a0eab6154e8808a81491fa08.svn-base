@@ -1,0 +1,55 @@
+﻿{include file="./admin-layout/header.html" /}
+<form method="post" action="{:url('storelist');}">
+	<div class="layui-form-item" style="padding: 15px 15px 0px 15px;margin-bottom: 0px;">
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="filter" id="filter" value="{$filter}" placeholder="请输入部门名称" autocomplete="off">
+		</div>
+		<button class="layui-btn layui-btn-small" id="search" type='submit' style="height:35px">
+			<i class="layui-icon">&#xe615;</i> 搜索
+		</button>
+	</div>
+</form>
+<div class="layui-form" style="padding: 5px 15px 15px 15px;padding-top:0px;">
+	<table class="layui-table admin-table" id="adminTable">
+		<thead>
+			<tr>
+				<th></th>
+				<th>部门名称</th>
+				<th>负责人</th>
+				<th>联系方式</th>
+				<th>店铺描述</th>
+			</tr>
+		</thead>
+		<tbody id="content">
+			{volist name="list" id="data" }
+			<tr>
+				<td><input type="checkbox" lay-filter="perselector" lay-skin="primary" data-id="{$data.id}" data-name="{$data.name}"></td>
+				<td>{$data.name}</td>
+				<td>{$data.leader}</td>
+				<td>{$data.phone}</td>
+				<td>{$data.desc}</td>
+			</tr>
+			{/volist}
+		</tbody>
+	</table>
+</div>
+<div class="am-cf">
+	<div class="am-fr over-h" id="rng">
+		{empty name="list"} {else /} {$list->render()|raw} {/empty}
+	</div>
+</div>
+</div>
+
+<script>
+	layui.use(['layer', 'form'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			layer = layui.layer; //独立版的layer无需执行这一句
+		form.on('checkbox(perselector)', function() {
+			$("[type='checkbox']").prop("checked", "");
+			$(this).prop("checked", "checked");
+			form.render('checkbox');
+		})
+
+	});
+</script>

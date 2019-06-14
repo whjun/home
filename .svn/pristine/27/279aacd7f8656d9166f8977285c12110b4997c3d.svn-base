@@ -1,0 +1,190 @@
+<?php
+class JSSDK {
+  private $appId;
+  private $appSecret;
+
+  public function __construct($appId, $appSecret) {
+    $this->appId = $appId;
+    $this->appSecret = $appSecret;
+  }
+
+  public function getSignPackage($url =  null) {
+    $jsapiTicket = $this->getJsApiTicket();
+
+    // 注意 URL 一定要动态获取，不能 hardcode.
+    //  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    //  $url1 = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    //  $urls = explode('#', $url1);
+    $url = explode('#', urldecode($url))[0];
+    $timestamp = time();
+    $nonceStr = $this->createNonceStr();
+
+    // 这里参数的顺序要按照 key 值 ASCII 码升序排序
+    $string = "jsapi_ticket=$jsapiTicket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
+
+    $signature = sha1($string);
+    // return $string.' '.$signature;
+    $signPackage = array(
+      "appId"     => $this->appId,
+      "nonceStr"  => $nonceStr,
+      "timestamp" => $timestamp,
+      "url"       => $url,
+      "signature" => $signature,
+      "rawString" => $string
+    );
+    return $signPackage; 
+  }
+
+  private function createNonceStr($length = 16) {
+    $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    $str = "";
+    for ($i = 0; $i < $length; $i++) {
+      $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+    }
+    return $str;
+  }
+
+  private function getJsApiTicket() {
+      
+      // $config_info = M('system_wxconfig')->where(array('id'=>2))->find();
+      //   $now_time = time();
+      //   if($now_time<$config_info['new_time']){
+      //       return $config_info['jsapi_ticket'];
+      //   }else{
+            
+            $accessToken = $this->getAccessToken();
+            // 如果是企业号用以下 URL 获取 ticket
+            // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
+            $url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=$accessToken";
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            $jsoninfo = json_decode($output, true);
+            //if ($jsoninfo['ticket']) {
+              //更新数据库access_token
+                //$data['jsapi_ticket'] = $jsoninfo['ticket'];
+                //$data['create_time'] = time();
+               // $data['new_time'] = time() + 290;
+              //  M('system_wxconfig')->where(array('id'=>2))->save($data);
+            //}
+            
+            return $jsoninfo['ticket'];
+        // }
+      
+    // jsapi_ticket 应该全局存储与更新，以下代码以写入到文件中做示例
+    $data = json_decode($this->get_php_file("jsapi_ticket.php"));
+    if ($data->expire_time < time()) {
+      $accessToken = $this->getAccessToken();
+      // 如果是企业号用以下 URL 获取 ticket
+      // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
+      $url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=$accessToken";
+      $res = json_decode($this->httpGet($url));
+      $ticket = $res->ticket;
+      if ($ticket) {
+        $data->expire_time = time() + 290;
+        $data->jsapi_ticket = $ticket;
+        $this->set_php_file("jsapi_ticket.php", json_encode($data));
+      }
+    } else {
+      $ticket = $data->jsapi_ticket;
+    }
+
+    return $ticket;
+  }
+
+  private function getAccessToken() {
+        // $config_info = M('system_wxconfig')->where(array('id'=>1))->find();
+        
+        // $appid = $config_info['appid'];
+        // $appsecret = $config_info['appsecret'];
+        // $now_time = time();
+        // if($now_time<$config_info['new_time']){
+        //     return $config_info['access_token'];
+        // }else{
+            $appid=$this->appId;
+            $appsecret=$this->appSecret;
+            $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appid&secret=$appsecret";
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $output = curl_exec($ch);
+            curl_close($ch);
+            $jsoninfo = json_decode($output, true);
+            $access_token = $jsoninfo["access_token"];
+
+            //更新数据库access_token
+            // $data['access_token'] = $access_token;
+            // $data['create_time'] = time();
+            // $data['new_time'] = time() + 290;
+            // M('system_wxconfig')->where(array('id'=>1))->save($data);
+
+            return $access_token;
+        // }
+
+  }
+
+  private function httpGet($url) {
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 500);
+    // 为保证第三方服务器与微信服务器之间数据传输的安全性，所有微信接口采用https方式调用，必须使用下面2行代码打开ssl安全校验。
+    // 如果在部署过程中代码在此处验证失败，请到 http://curl.haxx.se/ca/cacert.pem 下载新的证书判别文件。
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, true);
+    curl_setopt($curl, CURLOPT_URL, $url);
+
+    $res = curl_exec($curl);
+    curl_close($curl);
+    return $res;
+  }
+
+  private function get_php_file($filename) {
+    return trim(substr(file_get_contents($filename), 15));
+  }
+
+  private function set_php_file($filename, $content) {
+    $fp = fopen($filename, "w");
+    fwrite($fp, "<?php exit();?>" . $content);
+    fclose($fp);
+  }
+
+  //生成带参数的二维码
+  public function getWxQrcode($curlPost){
+    // http请求方式: POST
+    // URL: https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN
+    // POST数据格式：json
+    // POST数据例子：{"expire_seconds": 604800, "action_name": "QR_SCENE", "action_info": {"scene": {"scene_id": 123}}}
+    $accessToken=$this->getAccessToken();
+    $url='https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='.$accessToken; //接口地址
+    $postUrl = $url;
+    // $curlPost = $param;
+    $curlPost=[
+      'expire_seconds'=>604800,
+      'action_name'=>'QR_SCENE',
+      'action_info'=>[
+        'scene_id'=>'12345678901234567890123456789012',
+      ]
+    ];
+    $ch = curl_init();//初始化curl
+    curl_setopt($ch, CURLOPT_URL,$postUrl);//抓取指定网页
+    curl_setopt($ch, CURLOPT_HEADER, 0);//设置header
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//要求结果为字符串且输出到屏幕上
+    curl_setopt($ch, CURLOPT_POST, 1);//post提交方式
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
+    $data = curl_exec($ch);//运行curl
+    curl_close($ch);
+    // {"ticket":"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm
+    //   3sUw==","expire_seconds":60,"url":"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI"}
+
+    
+    return $data;
+  }
+}

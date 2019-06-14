@@ -1,0 +1,110 @@
+{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+	
+	.bigImg {
+		display: none;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.3);
+		left: 0;
+		top: 0;
+		z-index: 1000;
+		position: fixed;
+	}
+</style>
+<div class="admin-main">
+	<!--点击图片放大-->
+	<div class="bigImg pos-fix">
+		<img src="">
+	</div>
+	<!--点击图片放大结束-->
+	<div class="layui-form">
+		<blockquote class="layui-elem-quote" style="font-size: 12px;">
+			<form method="get" action="{:url('adminlog');}">
+				<div class="layui-form-item" style="margin-bottom: 0px;">
+					<div class="layui-input-inline" style="width:auto;">
+						<input type="text" class="layui-input" style="display: inline;width:200px" name="filter" id="name" value="{$filter}" placeholder="输入管理员信息" autocomplete="off">
+						<button class="layui-btn" id="search" type='submit'>
+							<i class="layui-icon">&#xe615;</i> 查询
+						</button>
+					</div>
+				</div>
+			</form>
+		</blockquote>
+		<table class="layui-table" id="list-table">
+			<thead>
+				<tr>
+					<th>管理员</th>
+					<th>账号</th>
+					<th>标题</th>
+					<th>内容</th>
+					<th>操作时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name='list' id='data'}
+				<tr>
+					<td>{$data.nickname}</td>
+					<td>{$data.username}</td>
+					<td>{$data.title}</td>
+					<td>{$data.content}</td>
+					<td>{$data.create_time}</td>
+				</tr>
+				{/volist}
+			</tbody>
+		</table>
+
+	</div>
+	<div class="am-cf">
+		<div class="am-fr over-h" id="rng">
+			{empty name="list"} {else /} {$list->render()|raw} {/empty}
+		</div>
+	</div>
+</div>
+<script>
+	layui.use(['layer', 'form'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			layer = layui.layer; //独立版的layer无需执行这一句
+
+	});
+	//审核
+	function Delete(id) {
+		layer.confirm(
+			'您确定要删除吗?', 
+		{
+			icon: 3,
+			title: '温馨提示'
+		}, function(index) {
+			$.ajax({
+				url: "{:url('deleteadmin')}" + '?id=' + id,
+				type: "GET"
+			}).done(function(data) {
+				if(data.result == 0) {
+					layer.msg(data.message, {
+						icon: 1,
+						time: 3000
+					}, function() {
+						location.href = data.url;
+					});
+				} else {
+					layer.msg(data.message, {
+						icon: 2,
+						time: 3000
+					});
+				}
+			}).error(function(data) {
+				layer.msg('错误', {
+					icon: 2,
+					content: '服务器错误'
+				});
+			});
+			layer.close(index);
+		});
+	}
+</script>

@@ -1,0 +1,78 @@
+$(function() {
+                $(".demo_1 button").click(function() {
+                    swal("这是一个信息提示框!");
+                });
+                $(".demo_2 button").click(function() {
+                    swal("Good!", "弹出了一个操作成功的提示框", "success");
+                });
+                $(".demo_3 button").click(function() {
+                    swal("OMG!", "弹出了一个错误提示框", "error");
+                });
+                $(".demo_4 button").click(function() {
+                    swal({
+                        title: "您确定要删除吗？",
+                        text: "您确定要删除这条数据？",
+                        type: "warning",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        confirmButtonText: "是的，我要删除",
+                        confirmButtonColor: "#ec6c62"
+                    }, function() {
+                        $.ajax({
+                            url: "do.php",
+                            type: "DELETE"
+                        }).done(function(data) {
+                            swal("操作成功!", "已成功删除数据！", "success");
+                        }).error(function(data) {
+                            swal("OMG", "删除操作失败了!", "error");
+                        });
+                    });
+                });
+
+                $(".demo_5 button").click(function() {
+                    swal({
+                        title: "Good!",
+                        text: '自定义<span style="color:red">图片</span>、<a href="#">HTML内容</a>。<br/>5秒后自动关闭。',
+                        imageUrl: "images/thumbs-up.jpg",
+                        html: true,
+                        timer: 5000,
+                        showConfirmButton: false
+                    });
+                });
+
+                $(".demo_6 button").click(function() {
+                    swal({
+                        title: "输入框来了",
+                        text: "这里可以输入并确认:",
+                        type: "input",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "填点东西到这里面吧"
+                    }, function(inputValue) {
+                        if (inputValue === false)
+                            return false;
+                        if (inputValue === "") {
+                            swal.showInputError("请输入!");
+                            return false
+                        }
+                        swal("棒极了!", "您填写的是: " + inputValue, "success");
+                    });
+                });
+            });
+            
+            
+            
+            
+            
+            参数	描述	默认值
+title	提示框标题	-
+text	提示内容	-
+type	提示类型，有：success（成功），error（错误），warning（警告），input（输入）。	-
+showCancelButton	是否显示“取消”按钮。	-
+animation	提示框弹出时的动画效果，如slide-from-top（从顶部滑下）等	-
+html	是否支持html内容。	-
+timer	设置自动关闭提示框时间（毫秒）。	-
+showConfirmButton	是否显示确定按钮。	-
+confirmButtonText	定义确定按钮文本内容。	-
+imageUrl	定义弹出框中的图片地址。

@@ -1,0 +1,133 @@
+﻿{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+	.layui-form-item .layui-input-inline {
+		width: 250px;
+	}
+</style>
+<div class="admin-main">
+	<!--点击图片放大-->
+	<div class="bigImg pos-fix">
+		<img src="">
+	</div>
+	<!--点击图片放大结束-->
+	<div class="layui-form">
+		<div class="layui-form-item">
+			<label class="layui-form-label">菜单名称</label>
+			<div class="layui-input-inline">
+				<input type="hidden" name="id" value="{$info.id}" />
+				<input type="text" name="name" lay-verify="required" placeholder="请输入菜单名称" value="{$info.name}" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">控制器方法</label>
+			<div class="layui-input-inline">
+				<input type="text" name="url" placeholder="请输入控制器方法" value="{$info.url}" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">上级分类：</label>
+			<div class="layui-input-inline">
+				<select name="cate1" id="cate1" lay-filter="cate1">
+					<option value="">请选择</option>
+					{foreach name="cate1" item="val"}
+					<option value="{$val.id}" {if condition="$val.id eq $info.first"}selected{/if}>{$val.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="layui-input-inline">
+				<select name="cate2" id="cate2" lay-filter="cate2">
+					<option value="">请选择</option>
+					{foreach name="cate2" item="val"}
+					<option value="{$val.id}" {if condition="$val.id eq $info.second"}selected{/if}>{$val.name}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+				<input type="radio" name="status" value="0" title="显示" {if condition="$info.status eq 0"} checked{/if}>
+				<input type="radio" name="status" value="1" title="隐藏" {if condition="$info.status eq 1"} checked{/if}>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block" style="margin-left: 30px;text-align: center;margin-top:20px;">
+				<button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="" lay-filter="submit">提交</button>
+				<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="javascript:history.go(-1)">返回</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		layui.use(['layer', 'form','upload'], function() {
+			var $ = layui.jquery,
+				form = layui.form,
+				upload = layui.upload,
+				layer = layui.layer; //独立版的layer无需执行这一句
+			//上传主图
+			var Avatar = upload.render({
+				elem: '#upload-img',
+				url: "{:url('Upload/uploadFile')}",
+				done: function(res) {
+					$('.graph').find('img').attr('src', res.resData.pathurl);
+					$('.graph').find("input[name='thumb']").val(res.resData.path);
+					$('.graph').find('.show-imgs').show();
+					//图片预览
+					$('.graph').find('.show-imgs').viewer();
+				}
+			});
+			//商品分类
+			form.on('select(cate1)', function(data) {
+				if(data.value) {
+					$.ajax({
+						url: "{:url('get_menu')}?pid=" + data.value,
+						type: "GET",
+					}).done(function(data) {
+						if(data.result == 0) {
+							$('#cate2').html(data.resData);
+							form.render('select');
+						} else {
+							layer.msg('请求失败', {
+								icon: 2,
+								time: 3000
+							});
+						}
+					}).error(function(data) {
+						layer.msg('错误', {
+							icon: 2,
+							content: '服务器错误'
+						});
+					});
+				}
+			})
+			//提交
+			form.on('submit(submit)', function(data) {
+				$.ajax({
+					url: "{:url('editmenu')}",
+					type: "POST",
+					data: data.field,
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+			});
+		});
+	</script>

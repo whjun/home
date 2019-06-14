@@ -1,0 +1,141 @@
+---------------------------------------------------------------
+[2019-06-04T15:09:46+08:00] 127.0.0.1 GET zizi.com/
+[运行时间：0.666001s] [吞吐率：1.50req/s] [内存消耗：2,128.26kb] [文件加载：69]
+[ info ] [ LANG ] D:\WWW1\zhediechuang\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'thinkphp_show_page_trace=0|0',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'zizi.com',
+)
+[ info ] [ PARAM ] array (
+)
+---------------------------------------------------------------
+[2019-06-04T15:09:46+08:00] 127.0.0.1 GET zizi.com/admin/index/index
+[运行时间：0.048002s] [吞吐率：20.83req/s] [内存消耗：2,158.48kb] [文件加载：70]
+[ info ] [ LANG ] D:\WWW1\zhediechuang\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'thinkphp_show_page_trace=0|0',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'zizi.com',
+)
+[ info ] [ PARAM ] array (
+)
+---------------------------------------------------------------
+[2019-06-04T15:09:46+08:00] 127.0.0.1 GET zizi.com/admin/index/login
+[运行时间：0.141997s] [吞吐率：7.04req/s] [内存消耗：2,300.52kb] [文件加载：72]
+[ info ] [ LANG ] D:\WWW1\zhediechuang\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'thinkphp_show_page_trace=0|0; PHPSESSID=dnd3tgdagh2i8roiquk2rp8j80',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'host' => 'zizi.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ VIEW ] D:\WWW1\zhediechuang\application\admin\view\index\login.html [ array (
+) ]
+---------------------------------------------------------------
+[2019-06-04T15:09:46+08:00] 127.0.0.1 GET zizi.com/captcha
+[运行时间：0.168999s] [吞吐率：5.92req/s] [内存消耗：1,644.58kb] [文件加载：57]
+[ info ] [ LANG ] D:\WWW1\zhediechuang\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => 'captcha/<id?>',
+  'route' => '\\think\\captcha\\CaptchaController@index',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'thinkphp_show_page_trace=0|0; PHPSESSID=dnd3tgdagh2i8roiquk2rp8j80',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://zizi.com/admin/index/login',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'zizi.com',
+)
+[ info ] [ PARAM ] array (
+)
+---------------------------------------------------------------
+[2019-06-04T15:10:01+08:00] 127.0.0.1 POST zizi.com/admin/index/login
+[运行时间：0.035036s] [吞吐率：28.54req/s] [内存消耗：2,120.13kb] [文件加载：69]
+[ info ] [ LANG ] D:\WWW1\zhediechuang\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'thinkphp_show_page_trace=0|0; PHPSESSID=dnd3tgdagh2i8roiquk2rp8j80',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://zizi.com/admin/index/login',
+  'content-type' => 'multipart/form-data; boundary=----WebKitFormBoundarypGzWUykkqDI2J9iu',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'origin' => 'http://zizi.com',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'content-length' => '665',
+  'connection' => 'close',
+  'host' => 'zizi.com',
+)
+[ info ] [ PARAM ] array (
+  '__RequestVerificationToken' => 'fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81',
+  'username' => 'admin',
+  'password' => '123456',
+  'captcha' => '5mer',
+  'rememberMe' => 'true',
+)
+---------------------------------------------------------------
+[2019-06-04T15:10:04+08:00] 127.0.0.1 GET zizi.com/captcha?d=0.38777129906748264
+[运行时间：0.070033s] [吞吐率：14.28req/s] [内存消耗：1,645.30kb] [文件加载：57]
+[ info ] [ LANG ] D:\WWW1\zhediechuang\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => 'captcha/<id?>',
+  'route' => '\\think\\captcha\\CaptchaController@index',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'thinkphp_show_page_trace=0|0; PHPSESSID=dnd3tgdagh2i8roiquk2rp8j80; username=admin; password=123456',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://zizi.com/admin/index/login',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'zizi.com',
+)
+[ info ] [ PARAM ] array (
+  'd' => '0.38777129906748264',
+)

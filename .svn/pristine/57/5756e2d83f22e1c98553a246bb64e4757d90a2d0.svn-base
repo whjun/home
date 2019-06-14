@@ -1,0 +1,1219 @@
+---------------------------------------------------------------
+[2019-06-03T11:35:37+08:00] 192.168.11.10 POST 192.168.11.39/v1/register
+[运行时间：0.892999s] [吞吐率：1.12req/s] [内存消耗：3,460.95kb] [文件加载：84]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/register',
+  'route' => 'api/:version.Register/register',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '87',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'code' => '',
+  'e_id' => '',
+  'password' => 'e10adc3949ba59abbe56e057f20f883e',
+  'phone' => '17370585275',
+  'token' => '',
+  'user_id' => '',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.067976s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.046022s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.044980s ]
+[ sql ] [ SQL ] UPDATE `ln_user_info`  SET `token` = 'c22c9563d296eedd74b604fe66f49864' , `update_time` = '.000000'  WHERE  `id` = 17 [ RunTime:0.043000s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.050997s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.044003s ]
+---------------------------------------------------------------
+[2019-06-03T11:35:38+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.630998s] [吞吐率：1.58req/s] [内存消耗：3,403.04kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.061997s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.041998s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.043002s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.041999s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.042000s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.041005s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_admin_area` [ RunTime:0.047000s ]
+[ sql ] [ SQL ] SELECT `id`,`name` FROM `ln_admin_area` WHERE  `status` = 0 [ RunTime:0.070001s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.042000s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.043012s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.040022s ]
+---------------------------------------------------------------
+[2019-06-03T11:35:44+08:00] 192.168.11.10 POST 192.168.11.39/v1/home_page
+[运行时间：0.923999s] [吞吐率：1.08req/s] [内存消耗：3,371.88kb] [文件加载：80]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'type' => '3',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.059998s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.042014s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.056998s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.046001s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.053001s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.041996s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2019-02-01 00:00:00'  LIMIT 1 [ RunTime:0.040003s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-02-01 00:00:00' AND '2019-03-01 00:00:00'  LIMIT 1 [ RunTime:0.039001s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-03-01 00:00:00' AND '2019-04-01 00:00:00'  LIMIT 1 [ RunTime:0.040997s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-04-01 00:00:00' AND '2019-05-01 00:00:00'  LIMIT 1 [ RunTime:0.040001s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-05-01 00:00:00' AND '2019-06-01 00:00:00'  LIMIT 1 [ RunTime:0.040998s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-06-01 00:00:00' AND '2019-07-01 00:00:00'  LIMIT 1 [ RunTime:0.039999s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-07-01 00:00:00' AND '2019-08-01 00:00:00'  LIMIT 1 [ RunTime:0.039000s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-08-01 00:00:00' AND '2019-09-01 00:00:00'  LIMIT 1 [ RunTime:0.040003s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-09-01 00:00:00' AND '2019-10-01 00:00:00'  LIMIT 1 [ RunTime:0.040030s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-10-01 00:00:00' AND '2019-11-01 00:00:00'  LIMIT 1 [ RunTime:0.040976s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-11-01 00:00:00' AND '2019-12-01 00:00:00'  LIMIT 1 [ RunTime:0.039992s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-12-01 00:00:00' AND '1577808000'  LIMIT 1 [ RunTime:0.041003s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.040018s ]
+[ sql ] [ SQL ] SELECT SUM(`total_price`) AS tp_sum FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.041000s ]
+---------------------------------------------------------------
+[2019-06-03T11:39:29+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.520862s] [吞吐率：1.92req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.072522s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.050087s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.048872s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.050510s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.050783s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.048839s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.049378s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.047319s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.046797s ]
+---------------------------------------------------------------
+[2019-06-03T11:39:31+08:00] 192.168.11.10 POST 192.168.11.39/v1/home_page
+[运行时间：0.951988s] [吞吐率：1.05req/s] [内存消耗：3,371.88kb] [文件加载：80]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'type' => '3',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.066198s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.045956s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.045326s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.046359s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.044432s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.045788s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2019-02-01 00:00:00'  LIMIT 1 [ RunTime:0.043295s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-02-01 00:00:00' AND '2019-03-01 00:00:00'  LIMIT 1 [ RunTime:0.043773s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-03-01 00:00:00' AND '2019-04-01 00:00:00'  LIMIT 1 [ RunTime:0.044622s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-04-01 00:00:00' AND '2019-05-01 00:00:00'  LIMIT 1 [ RunTime:0.045000s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-05-01 00:00:00' AND '2019-06-01 00:00:00'  LIMIT 1 [ RunTime:0.043430s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-06-01 00:00:00' AND '2019-07-01 00:00:00'  LIMIT 1 [ RunTime:0.043770s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-07-01 00:00:00' AND '2019-08-01 00:00:00'  LIMIT 1 [ RunTime:0.043733s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-08-01 00:00:00' AND '2019-09-01 00:00:00'  LIMIT 1 [ RunTime:0.043244s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-09-01 00:00:00' AND '2019-10-01 00:00:00'  LIMIT 1 [ RunTime:0.044016s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-10-01 00:00:00' AND '2019-11-01 00:00:00'  LIMIT 1 [ RunTime:0.043689s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-11-01 00:00:00' AND '2019-12-01 00:00:00'  LIMIT 1 [ RunTime:0.043021s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-12-01 00:00:00' AND '1577808000'  LIMIT 1 [ RunTime:0.044478s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.044328s ]
+[ sql ] [ SQL ] SELECT SUM(`total_price`) AS tp_sum FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.043963s ]
+---------------------------------------------------------------
+[2019-06-03T11:42:14+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.546957s] [吞吐率：1.83req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.080831s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.050225s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.048766s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.050613s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.058501s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.063943s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.047620s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.050568s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.049051s ]
+---------------------------------------------------------------
+[2019-06-03T11:42:19+08:00] 192.168.11.10 POST 192.168.11.39/v1/message
+[运行时间：0.374569s] [吞吐率：2.67req/s] [内存消耗：3,463.87kb] [文件加载：82]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/message',
+  'route' => 'api/:version._personal/getMessage',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'page' => '1',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.086425s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.041184s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.041292s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.042603s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `ln_notices` WHERE  `user_id` = 17 OR `type` = 1 ORDER BY `create_time` DESC LIMIT 1 [ RunTime:0.040713s ]
+[ sql ] [ SQL ] SELECT `title`,`id`,`img`,`content`,`is_read`,`user_id`,`status`,`type`,`create_time` FROM `ln_notices` WHERE  `user_id` = 17 OR `type` = 1 ORDER BY `create_time` DESC LIMIT 0,10 [ RunTime:0.041199s ]
+---------------------------------------------------------------
+[2019-06-03T11:42:21+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.490208s] [吞吐率：2.04req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.067945s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.051050s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.044415s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.045090s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.044537s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.045126s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.058259s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.044601s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.042732s ]
+---------------------------------------------------------------
+[2019-06-03T11:46:49+08:00] 192.168.11.154 POST 192.168.11.39/v1/my_info
+[运行时间：0.235910s] [吞吐率：4.24req/s] [内存消耗：3,050.80kb] [文件加载：70]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'user-agent' => 'okhttp/3.10.0',
+  'accept-encoding' => 'gzip',
+  'connection' => 'close',
+  'host' => '192.168.11.39',
+  'content-length' => '78',
+  'content-type' => 'application/x-www-form-urlencoded',
+)
+[ info ] [ PARAM ] array (
+  'user_id' => '22',
+  'token' => '777f5089016c0b675c6111e2cf673e36',
+  'phone' => '13262938372',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.078432s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.051309s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '13262938372' LIMIT 1 [ RunTime:0.053154s ]
+---------------------------------------------------------------
+[2019-06-03T11:46:50+08:00] 192.168.11.154 POST 192.168.11.39/v1/home_page
+[运行时间：0.174696s] [吞吐率：5.72req/s] [内存消耗：3,022.55kb] [文件加载：70]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'user-agent' => 'okhttp/3.10.0',
+  'accept-encoding' => 'gzip',
+  'connection' => 'close',
+  'host' => '192.168.11.39',
+  'content-length' => '74',
+  'content-type' => 'application/x-www-form-urlencoded',
+)
+[ info ] [ PARAM ] array (
+  'type' => '1',
+  'token' => '777f5089016c0b675c6111e2cf673e36',
+  'user_id' => '22',
+  'phone' => '13262938372',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.059278s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.040835s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '13262938372' LIMIT 1 [ RunTime:0.040553s ]
+---------------------------------------------------------------
+[2019-06-03T11:47:15+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.507298s] [吞吐率：1.97req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.076947s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.050889s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.049641s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.051484s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.050231s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.051111s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.049277s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.044583s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.041164s ]
+---------------------------------------------------------------
+[2019-06-03T11:47:16+08:00] 192.168.11.10 POST 192.168.11.39/v1/home_page
+[运行时间：0.967111s] [吞吐率：1.03req/s] [内存消耗：3,371.88kb] [文件加载：80]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'type' => '3',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.067120s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.044516s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.045997s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.045170s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.045162s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.046531s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2019-02-01 00:00:00'  LIMIT 1 [ RunTime:0.044183s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-02-01 00:00:00' AND '2019-03-01 00:00:00'  LIMIT 1 [ RunTime:0.044658s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-03-01 00:00:00' AND '2019-04-01 00:00:00'  LIMIT 1 [ RunTime:0.043626s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-04-01 00:00:00' AND '2019-05-01 00:00:00'  LIMIT 1 [ RunTime:0.044408s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-05-01 00:00:00' AND '2019-06-01 00:00:00'  LIMIT 1 [ RunTime:0.043527s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-06-01 00:00:00' AND '2019-07-01 00:00:00'  LIMIT 1 [ RunTime:0.044353s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-07-01 00:00:00' AND '2019-08-01 00:00:00'  LIMIT 1 [ RunTime:0.043902s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-08-01 00:00:00' AND '2019-09-01 00:00:00'  LIMIT 1 [ RunTime:0.045705s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-09-01 00:00:00' AND '2019-10-01 00:00:00'  LIMIT 1 [ RunTime:0.044433s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-10-01 00:00:00' AND '2019-11-01 00:00:00'  LIMIT 1 [ RunTime:0.044845s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-11-01 00:00:00' AND '2019-12-01 00:00:00'  LIMIT 1 [ RunTime:0.046066s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-12-01 00:00:00' AND '1577808000'  LIMIT 1 [ RunTime:0.046909s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.044130s ]
+[ sql ] [ SQL ] SELECT SUM(`total_price`) AS tp_sum FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.046801s ]
+---------------------------------------------------------------
+[2019-06-03T11:49:48+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.519671s] [吞吐率：1.92req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.071643s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.050699s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.051442s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.047006s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.051993s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.049394s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.050271s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.048981s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.053285s ]
+---------------------------------------------------------------
+[2019-06-03T11:49:50+08:00] 192.168.11.10 POST 192.168.11.39/v1/home_page
+[运行时间：0.946364s] [吞吐率：1.06req/s] [内存消耗：3,371.88kb] [文件加载：80]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'type' => '3',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.061293s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.043243s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.042429s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.043021s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.040066s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.045009s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2019-02-01 00:00:00'  LIMIT 1 [ RunTime:0.040833s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-02-01 00:00:00' AND '2019-03-01 00:00:00'  LIMIT 1 [ RunTime:0.041058s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-03-01 00:00:00' AND '2019-04-01 00:00:00'  LIMIT 1 [ RunTime:0.047411s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-04-01 00:00:00' AND '2019-05-01 00:00:00'  LIMIT 1 [ RunTime:0.074113s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-05-01 00:00:00' AND '2019-06-01 00:00:00'  LIMIT 1 [ RunTime:0.057442s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-06-01 00:00:00' AND '2019-07-01 00:00:00'  LIMIT 1 [ RunTime:0.040492s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-07-01 00:00:00' AND '2019-08-01 00:00:00'  LIMIT 1 [ RunTime:0.041351s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-08-01 00:00:00' AND '2019-09-01 00:00:00'  LIMIT 1 [ RunTime:0.040905s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-09-01 00:00:00' AND '2019-10-01 00:00:00'  LIMIT 1 [ RunTime:0.040854s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-10-01 00:00:00' AND '2019-11-01 00:00:00'  LIMIT 1 [ RunTime:0.041132s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-11-01 00:00:00' AND '2019-12-01 00:00:00'  LIMIT 1 [ RunTime:0.040660s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-12-01 00:00:00' AND '1577808000'  LIMIT 1 [ RunTime:0.039874s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.041346s ]
+[ sql ] [ SQL ] SELECT SUM(`total_price`) AS tp_sum FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.039968s ]
+---------------------------------------------------------------
+[2019-06-03T11:49:55+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.470468s] [吞吐率：2.13req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.065362s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.043322s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.044351s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.043426s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.043983s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.043261s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.045787s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.043884s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.057145s ]
+---------------------------------------------------------------
+[2019-06-03T11:51:02+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.502191s] [吞吐率：1.99req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.077667s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.052420s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.050980s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.048950s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.049486s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.041810s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.043404s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.043491s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.040995s ]
+---------------------------------------------------------------
+[2019-06-03T11:51:03+08:00] 192.168.11.10 POST 192.168.11.39/v1/home_page
+[运行时间：0.922204s] [吞吐率：1.08req/s] [内存消耗：3,371.88kb] [文件加载：80]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'type' => '3',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.064036s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.043419s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.043565s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.042640s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.041164s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.042992s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2019-02-01 00:00:00'  LIMIT 1 [ RunTime:0.042150s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-02-01 00:00:00' AND '2019-03-01 00:00:00'  LIMIT 1 [ RunTime:0.042015s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-03-01 00:00:00' AND '2019-04-01 00:00:00'  LIMIT 1 [ RunTime:0.042035s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-04-01 00:00:00' AND '2019-05-01 00:00:00'  LIMIT 1 [ RunTime:0.049611s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-05-01 00:00:00' AND '2019-06-01 00:00:00'  LIMIT 1 [ RunTime:0.041938s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-06-01 00:00:00' AND '2019-07-01 00:00:00'  LIMIT 1 [ RunTime:0.041899s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-07-01 00:00:00' AND '2019-08-01 00:00:00'  LIMIT 1 [ RunTime:0.041632s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-08-01 00:00:00' AND '2019-09-01 00:00:00'  LIMIT 1 [ RunTime:0.044547s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-09-01 00:00:00' AND '2019-10-01 00:00:00'  LIMIT 1 [ RunTime:0.042349s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-10-01 00:00:00' AND '2019-11-01 00:00:00'  LIMIT 1 [ RunTime:0.041982s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-11-01 00:00:00' AND '2019-12-01 00:00:00'  LIMIT 1 [ RunTime:0.042105s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-12-01 00:00:00' AND '1577808000'  LIMIT 1 [ RunTime:0.042322s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.042315s ]
+[ sql ] [ SQL ] SELECT SUM(`total_price`) AS tp_sum FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.042174s ]
+---------------------------------------------------------------
+[2019-06-03T11:51:07+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.609786s] [吞吐率：1.64req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.071600s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.069113s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.066429s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.056006s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.104092s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.040883s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.066282s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.056215s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.039228s ]
+---------------------------------------------------------------
+[2019-06-03T11:53:53+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.550887s] [吞吐率：1.82req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.080810s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.054301s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.052789s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.053216s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.052872s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.052437s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.051457s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.053151s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.052211s ]
+---------------------------------------------------------------
+[2019-06-03T11:53:56+08:00] 192.168.11.10 POST 192.168.11.39/v1/order_receiving
+[运行时间：1.750726s] [吞吐率：0.57req/s] [内存消耗：3,543.11kb] [文件加载：83]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/order_receiving',
+  'route' => 'api/:version.Indent/getOrder',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '126',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'destination' => '120.379369,36.089476',
+  'e_id' => '12',
+  'page' => '1',
+  'phone' => '17370585275',
+  'status' => '0',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.068757s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.041991s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.041775s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_admin_config` [ RunTime:0.041743s ]
+[ sql ] [ SQL ] SELECT `value` FROM `ln_admin_config` WHERE  `id` = 1 LIMIT 1 [ RunTime:0.040222s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.041547s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '0'  AND `O`.`engineer_id` = '' OR `O`.`engineer_id` = '12' LIMIT 1 [ RunTime:0.040795s ]
+[ sql ] [ SQL ] SELECT `O`.`id`,`O`.`status`,`O`.`service_id`,`O`.`engineer_id`,`O`.`info_id`,`appointment_time`,`I`.`province`,`I`.`city`,`I`.`area`,`S`.`name`,`S`.`artificial_cost`,`I`.`address`,`I`.`customer_name`,`I`.`order_no`,`I`.`customer_tel`,`I`.`product_categories`,`S`.`settlement_price` FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '0'  AND ( `O`.`engineer_id` = '0' or `O`.`engineer_id` = '12' ) LIMIT 0,10 [ RunTime:0.042805s ]
+---------------------------------------------------------------
+[2019-06-03T11:53:56+08:00] 192.168.11.10 POST 192.168.11.39/v1/order_receiving
+[运行时间：0.578545s] [吞吐率：1.73req/s] [内存消耗：3,541.24kb] [文件加载：83]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/order_receiving',
+  'route' => 'api/:version.Indent/getOrder',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '126',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'destination' => '120.379369,36.089476',
+  'e_id' => '12',
+  'page' => '1',
+  'phone' => '17370585275',
+  'status' => '2',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.062885s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.043252s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.045576s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.043482s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '2'  AND `O`.`engineer_id` = '12' LIMIT 1 [ RunTime:0.045930s ]
+[ sql ] [ SQL ] SELECT `O`.`id`,`O`.`service_id`,`O`.`engineer_id`,`O`.`info_id`,`O`.`appointment_time`,`I`.`province`,`I`.`city`,`I`.`product_categories`,`I`.`area`,`S`.`name`,`S`.`settlement_price`,`S`.`artificial_cost`,`I`.`address`,`O`.`status`,`O`.`is_pay`,`O`.`is_arrive`,`O`.`is_alter`,`I`.`annotation`,`O`.`cancel_reason`,`I`.`customer_tel`,`I`.`order_no` FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '2'  AND `O`.`engineer_id` = '12' LIMIT 0,10 [ RunTime:0.044409s ]
+---------------------------------------------------------------
+[2019-06-03T11:53:57+08:00] 192.168.11.10 POST 192.168.11.39/v1/order_receiving
+[运行时间：1.584173s] [吞吐率：0.63req/s] [内存消耗：3,543.11kb] [文件加载：83]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/order_receiving',
+  'route' => 'api/:version.Indent/getOrder',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '126',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'destination' => '120.379369,36.089476',
+  'e_id' => '12',
+  'page' => '1',
+  'phone' => '17370585275',
+  'status' => '0',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.061273s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.041981s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.041090s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_admin_config` [ RunTime:0.042192s ]
+[ sql ] [ SQL ] SELECT `value` FROM `ln_admin_config` WHERE  `id` = 1 LIMIT 1 [ RunTime:0.039034s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.042769s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '0'  AND `O`.`engineer_id` = '' OR `O`.`engineer_id` = '12' LIMIT 1 [ RunTime:0.045092s ]
+[ sql ] [ SQL ] SELECT `O`.`id`,`O`.`status`,`O`.`service_id`,`O`.`engineer_id`,`O`.`info_id`,`appointment_time`,`I`.`province`,`I`.`city`,`I`.`area`,`S`.`name`,`S`.`artificial_cost`,`I`.`address`,`I`.`customer_name`,`I`.`order_no`,`I`.`customer_tel`,`I`.`product_categories`,`S`.`settlement_price` FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '0'  AND ( `O`.`engineer_id` = '0' or `O`.`engineer_id` = '12' ) LIMIT 0,10 [ RunTime:0.041522s ]
+---------------------------------------------------------------
+[2019-06-03T11:53:58+08:00] 192.168.11.10 POST 192.168.11.39/v1/order_receiving
+[运行时间：0.593009s] [吞吐率：1.69req/s] [内存消耗：3,541.24kb] [文件加载：83]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/order_receiving',
+  'route' => 'api/:version.Indent/getOrder',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '126',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'destination' => '120.379369,36.089476',
+  'e_id' => '12',
+  'page' => '1',
+  'phone' => '17370585275',
+  'status' => '2',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.074411s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.057084s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.044776s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.044500s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '2'  AND `O`.`engineer_id` = '12' LIMIT 1 [ RunTime:0.045875s ]
+[ sql ] [ SQL ] SELECT `O`.`id`,`O`.`service_id`,`O`.`engineer_id`,`O`.`info_id`,`O`.`appointment_time`,`I`.`province`,`I`.`city`,`I`.`product_categories`,`I`.`area`,`S`.`name`,`S`.`settlement_price`,`S`.`artificial_cost`,`I`.`address`,`O`.`status`,`O`.`is_pay`,`O`.`is_arrive`,`O`.`is_alter`,`I`.`annotation`,`O`.`cancel_reason`,`I`.`customer_tel`,`I`.`order_no` FROM `ln_orders` `O` INNER JOIN `ln_order_info` `I` ON `O`.`info_id`=`I`.`id` INNER JOIN `ln_service_standards` `S` ON `O`.`service_id`=`S`.`id` WHERE  `O`.`status` = '2'  AND `O`.`engineer_id` = '12' LIMIT 0,10 [ RunTime:0.052019s ]
+---------------------------------------------------------------
+[2019-06-03T11:54:10+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.539606s] [吞吐率：1.85req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.077040s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.051145s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.053181s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.048740s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.069696s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.049760s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.049941s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.049307s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.048893s ]
+---------------------------------------------------------------
+[2019-06-03T12:09:39+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.630716s] [吞吐率：1.59req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.081467s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.074742s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.101276s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.054569s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.054357s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.053024s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.052621s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.062822s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.049760s ]
+---------------------------------------------------------------
+[2019-06-03T12:09:40+08:00] 192.168.11.10 POST 192.168.11.39/v1/home_page
+[运行时间：0.957219s] [吞吐率：1.04req/s] [内存消耗：3,371.88kb] [文件加载：80]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/home_page',
+  'route' => 'api/:version.HomePage/statistics',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '82',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'type' => '3',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.065064s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.064216s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.065689s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.043275s ]
+[ sql ] [ SQL ] SELECT `id` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.043249s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_orders` [ RunTime:0.042631s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2019-02-01 00:00:00'  LIMIT 1 [ RunTime:0.042314s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-02-01 00:00:00' AND '2019-03-01 00:00:00'  LIMIT 1 [ RunTime:0.042253s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-03-01 00:00:00' AND '2019-04-01 00:00:00'  LIMIT 1 [ RunTime:0.043082s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-04-01 00:00:00' AND '2019-05-01 00:00:00'  LIMIT 1 [ RunTime:0.042026s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-05-01 00:00:00' AND '2019-06-01 00:00:00'  LIMIT 1 [ RunTime:0.042380s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-06-01 00:00:00' AND '2019-07-01 00:00:00'  LIMIT 1 [ RunTime:0.041622s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-07-01 00:00:00' AND '2019-08-01 00:00:00'  LIMIT 1 [ RunTime:0.041808s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-08-01 00:00:00' AND '2019-09-01 00:00:00'  LIMIT 1 [ RunTime:0.041690s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-09-01 00:00:00' AND '2019-10-01 00:00:00'  LIMIT 1 [ RunTime:0.041754s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-10-01 00:00:00' AND '2019-11-01 00:00:00'  LIMIT 1 [ RunTime:0.042580s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-11-01 00:00:00' AND '2019-12-01 00:00:00'  LIMIT 1 [ RunTime:0.042351s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `status` = 3  AND `create_time` BETWEEN '2019-12-01 00:00:00' AND '1577808000'  LIMIT 1 [ RunTime:0.042773s ]
+[ sql ] [ SQL ] SELECT COUNT(`id`) AS tp_count FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.041450s ]
+[ sql ] [ SQL ] SELECT SUM(`total_price`) AS tp_sum FROM `ln_orders` WHERE  `engineer_id` = 12  AND `create_time` BETWEEN '2019-01-01 00:00:00' AND '2020-01-01 00:00:00'  AND `status` = 3 LIMIT 1 [ RunTime:0.042388s ]
+---------------------------------------------------------------
+[2019-06-03T12:09:42+08:00] 192.168.11.10 POST 192.168.11.39/v1/my_info
+[运行时间：0.435590s] [吞吐率：2.30req/s] [内存消耗：3,401.09kb] [文件加载：81]
+[ info ] [ LANG ] D:\WWW1\linuo\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'rule' => '<version>/my_info',
+  'route' => 'api/:version._personal/myInfo',
+  'option' => 
+  array (
+    'merge_rule_regex' => false,
+  ),
+  'var' => 
+  array (
+    'version' => 'v1',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept-encoding' => 'gzip, deflate',
+  'content-length' => '75',
+  'accept-language' => 'zh-Hans-CN;q=1',
+  'user-agent' => 'LiRuoRuiTeProject/1.0 (iPhone; iOS 12.2; Scale/2.00)',
+  'accept' => '*/*',
+  'connection' => 'close',
+  'content-type' => 'application/x-www-form-urlencoded',
+  'host' => '192.168.11.39',
+)
+[ info ] [ PARAM ] array (
+  'e_id' => '12',
+  'phone' => '17370585275',
+  'token' => 'c22c9563d296eedd74b604fe66f49864',
+  'user_id' => '17',
+  'version' => 'v1',
+)
+[ info ] [ DB ] INIT mysql
+[ sql ] [ DB ] CONNECT:[ UseTime:0.061361s ] mysql:host=47.92.70.177;port=3306;dbname=linuoruite;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_user_info` [ RunTime:0.043122s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_user_info` WHERE  `phone` = '17370585275' LIMIT 1 [ RunTime:0.041905s ]
+[ sql ] [ SQL ] SELECT `img_url`,`sex`,`phone`,`real_name`,`id_number`,`native_province_id`,`native_city_id`,`native_area_id`,`native_address`,`birthday`,`balance`,`pay_number`,`ali_number`,`password` FROM `ln_user_info` WHERE  `id` = 17 LIMIT 1 [ RunTime:0.041067s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_notices` [ RunTime:0.041746s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_notices` WHERE  `user_id` = 17  AND `is_read` = 0 [ RunTime:0.041205s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `ln_engineer` [ RunTime:0.040549s ]
+[ sql ] [ SQL ] SELECT * FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.042010s ]
+[ sql ] [ SQL ] SELECT id as e_id,`status` FROM `ln_engineer` WHERE  `user_id` = 17 LIMIT 1 [ RunTime:0.040807s ]

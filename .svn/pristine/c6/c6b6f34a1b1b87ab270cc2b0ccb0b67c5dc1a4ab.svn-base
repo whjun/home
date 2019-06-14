@@ -1,0 +1,24 @@
+$(function() {
+    $("#file_upload").uploadify({
+        'multi'      : false,
+        swf           : swf,
+        uploader      : image_upload_url,
+        buttonText    : '图片上传',
+        fileTypeDesc  : 'Image files',
+        fileObjName   : 'file',
+        fileTypeExts  : '*.gif;*.jpg;*.png',
+        onUploadSuccess : function(file, data, response) {
+            // 我们需要扩展内容
+            if(response) {
+                var obj = JSON.parse(data);
+                var arr=obj.data.split("/upload");
+                var newSrc="/upload"+arr[1];
+                $('#upload_org_code_img').attr("src", obj.data);
+                $('#file_upload_image').attr("value",newSrc);
+                $('#upload_org_code_img').show();
+            }
+        }
+
+
+    });
+});

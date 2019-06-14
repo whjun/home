@@ -1,0 +1,115 @@
+{include file="./admin-layout/header.html" /}
+<style>
+.layui-form-label{
+    width: auto;
+}
+</style>
+<div class="admin-main">
+    <div class="layui-form">
+        <blockquote class="layui-elem-quote" style="font-size: 12px;">
+            <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 80px;">
+                <form method="get" action="{:url('orderlist')}">
+                    <div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 120px;">
+                            <label class="layui-form-label">订单状态：</label>
+                            <div class="layui-input-block" style="width: 101px;margin-left: 90px;">
+                                <select name="status" lay-verify="">
+                                    <option value="">全部</option>
+                                    <option value="1">租借中</option>
+                                    <option value="2">已完成</option>
+                                    <option value="3">等待付款</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 120px;">
+                            <label class="layui-form-label">支付方式：</label>
+                            <div class="layui-input-block" style="width: 101px;margin-left: 90px;">
+                                <select name="payment" lay-verify="">
+                                    <option value="">全部</option>
+                                    <option value="1">支付宝</option>
+                                    <option value="2">微信</option>
+                                    <option value="3">押金抵扣</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 120px;">
+                            <label class="layui-form-label">所属医院：</label>
+                            <div class="layui-input-block" style="width: 101px;margin-left: 90px;">
+                                <select name="hospital" lay-verify="">
+                                    <option value="">全部</option>
+                                    {foreach name="hospital" item="v"}
+                                    <option value="{$v.id}">{$v.hospital_name}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 120px;">
+                            <label class="layui-form-label">时间范围：</label>
+                            <input type="text" style="width: 200px" class="layui-input" id="test1">
+                        </div>
+                    </div>
+                    <div style="float: left">
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;margin-left: 11px;">
+                            <label class="layui-form-label">订单号：</label>
+                            <input type="text" class="layui-input" value="{notempty name='oppen_id'}{$oppen_id}{/notempty}" style="width:200px" name="oppen_id" id="name" placeholder="输入订单号搜索" autocomplete="off">
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">借出设备名称：</label>
+                            <input type="text" class="layui-input" value="{notempty name='oppen_id'}{$oppen_id}{/notempty}" style="width:200px" name="oppen_id" id="name" placeholder="输入设备名称搜索" autocomplete="off">
+                        </div>
+                        <button class="layui-btn layui-btn-normal" style="margin-left: 30px;"><i class="layui-icon">&#xe615;</i> 查询</button>
+                    </div>
+                </form>
+            </div>
+        </blockquote>
+        <table id="demo" lay-filter="test"></table>
+    </div>
+</div>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+        });
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test1' //指定元素
+        });
+        });
+        layui.use('table', function(){
+        var table = layui.table;
+        
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            ,height: 312
+            ,width: '100%'
+            ,url: '/demo/table/user/' //数据接口
+            ,page: true //开启分页
+            ,cols: [[ //表头
+            {field: 'id', title: '订单号', fixed: 'left',}
+            ,{field: 'username', title: '租借时间',}
+            ,{field: 'sex', title: '所属医院',}
+            ,{field: 'city', title: '计费规则',} 
+            ,{field: 'sign', title: '使用时长',}
+            ,{field: 'experience', title: '收费方式',}
+            ,{field: 'score', title: '租金金额',}
+            ,{field: 'classify', title: '优惠金额',}
+            ,{field: 'wealth', title: '应付金额',}
+            ,{field: 'wealth', title: '用户编号',}
+            ,{field: 'wealth', title: '订单状态',}
+            ,{field: 'wealth', title: '归还地点',}
+            ,{field: 'wealth', title: '实付金额',}
+            ,{field: 'wealth', title: '操作',}
+            ]]
+        });
+    
+    });
+</script>

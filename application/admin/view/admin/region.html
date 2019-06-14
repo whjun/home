@@ -1,0 +1,236 @@
+{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+	
+	.bigImg {
+		display: none;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.3);
+		left: 0;
+		top: 0;
+		z-index: 1000;
+		position: fixed;
+	}
+</style>
+<div class="admin-main">
+	<!--点击图片放大-->
+	<div class="bigImg pos-fix">
+		<img src="">
+	</div>
+	<!--点击图片放大结束-->
+	<div class="layui-form">
+		<blockquote class="layui-elem-quote" style="font-size: 12px;">
+			<div class="layui-form-item" style="margin-bottom: 0px;">
+				{foreach name="menulist" item="val"} {if condition="$val.id eq 23"}
+				<div class="layui-input-inline" style="width: auto;">
+					<button class="layui-btn layui-btn-normal" onclick="addregion({$level},{$pid})"><i class="layui-icon">&#xe608;</i>{$val.title}</button>
+					{if condition="$level gt 1"}
+					<button class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button> {/if}
+				</div>
+				{/if} {/foreach}
+			</div>
+		</blockquote>
+		<table class="layui-table" id="list-table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>名称</th>
+					<th>级别</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name='list' id='data'}
+				<tr>
+					<td>{$data.id}</td>
+					<td>{$data.name}</td>
+					<td>{$data.level}</td>
+					<td>
+						{foreach name="menulist" item="val"} {if condition="$data.level neq 3&&$val.id eq 25"}
+						<a class="layui-btn layui-btn-xs" href='{:url("region",["level" => $data.level,"id" => $data.id,"parentid" => $data.pid])}'>{$val.title}</a>
+						{/if} {if condition="$val.id eq 24"}
+						<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="editregion('{$data.id}','{$data.name}')">{$val.title}</button>
+						{/if} {if condition="$val.id eq 26"}
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$data.id})'>{$val.title}</button> {/if} {/foreach}
+					</td>
+				</tr>
+				{/volist}
+			</tbody>
+		</table>
+		<div id="region" style="padding-top:20px;display: none;">
+			<div class="layui-form-item">
+				<label class="layui-form-label">ID：</label>
+				<div class="layui-input-inline">
+					<input type="number" name="id" maxlength="10" minlength="6" lay-verify="required" placeholder="请输入ID" value="" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">* 区域唯一标识，请填写数字，在6-10个字符之间</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">名称：</label>
+				<div class="layui-input-inline">
+					<input type="text" name="name" maxlength="255" lay-verify="required" placeholder="请输入名称" value="" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">* 区域名称，请填写真实区域</div>
+			</div>
+		</div>
+	</div>
+	<div class="am-cf">
+		<div class="am-fr over-h" id="rng">
+			{empty name="list"} {else /} {$list->render()|raw} {/empty}
+		</div>
+	</div>
+</div>
+<script>
+	layui.use(['layer', 'form'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			layer = layui.layer; //独立版的layer无需执行这一句
+
+	});
+	//新增
+	function addregion(level,pid) {
+		$("input[name='id']").val('');
+		$("input[name='name'").val('');
+		layer.open({
+			type: 1,
+			title: '新增/编辑',
+			shade: 0.8,
+			area: ['700px', '250px'],
+			content: $('#region'),
+			btn: ['确定', '取消'],
+			btnAlign: 'c',
+			skin: 'open_class',
+			yes: function(layero, index) {
+				var id = $("input[name='id']").val();
+				var name = $("input[name='name'").val();
+				if(!id){
+					layer.msg('请输入ID');
+					return false;
+				}
+				if(!name){
+					layer.msg('请输入名称');
+					return false;
+				}
+				var field = {};
+				field.id = id;
+				field.name = name;
+				field.level = level;
+				field.pid = pid;
+				$.ajax({
+					url: "{:url('addregion')}",
+					data: field,
+					type: "POST"
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+				layer.closeAll();
+			}
+		});
+	}
+	//编辑
+	function editregion(id,name) {
+		$("input[name='id']").attr('disabled',true).val(id);
+		$("input[name='name'").val(name);
+		layer.open({
+			type: 1,
+			title: '新增/编辑',
+			shade: 0.8,
+			area: ['700px', '250px'],
+			content: $('#region'),
+			btn: ['确定', '取消'],
+			btnAlign: 'c',
+			skin: 'open_class',
+			yes: function(layero, index) {
+				var name = $("input[name='name'").val();
+				if(!name){
+					layer.msg('请输入名称');
+					return false;
+				}
+				var field = {};
+				field.id = id;
+				field.name = name;
+				$.ajax({
+					url: "{:url('editregion')}",
+					data: field,
+					type: "POST"
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+				layer.closeAll();
+			}
+		});
+	}
+	//审核
+	function Delete(id) {
+		layer.confirm(
+			'您确定要删除吗?', {
+				icon: 3,
+				title: '温馨提示'
+			},
+			function(index) {
+				$.ajax({
+					url: "{:url('deleteregion')}" + '?id=' + id,
+					type: "GET"
+				}).done(function(data) {
+					if(data.result == 0) {
+						layer.msg(data.message, {
+							icon: 1,
+							time: 3000
+						}, function() {
+							location.href = data.url;
+						});
+					} else {
+						layer.msg(data.message, {
+							icon: 2,
+							time: 3000
+						});
+					}
+				}).error(function(data) {
+					layer.msg('错误', {
+						icon: 2,
+						content: '服务器错误'
+					});
+				});
+				layer.close(index);
+			});
+	}
+</script>

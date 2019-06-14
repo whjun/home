@@ -1,0 +1,29 @@
+$(function() {
+    var imgs = '';
+    $("#file_upload").uploadify({
+        'multi'      : true,
+        swf           : swf,
+        uploader      : image_upload_url,
+        buttonText    : '图片上传',
+        fileTypeDesc  : 'Image files',
+        fileObjName   : 'file',
+        fileTypeExts  : '*.gif;*.jpg;*.png',
+        onUploadSuccess : function(file, data, response) {
+            // 我们需要扩展内容
+            if(response) {
+                var obj = JSON.parse(data);
+                var arr=obj.data.split("/upload");
+                var newSrc="/upload"+arr[1];
+                $("#inputFileWrapper").append($("<img src='" + obj.data + "' width='150' height='150'/>"));
+                imgs += newSrc+',';
+                var newimgs = imgs.substr(0, imgs.length - 1);//去除,
+                var toarray = [];
+                toarray   = newimgs.split(",");//转成数组
+                var jsonstr = JSON.stringify(toarray);//转成json
+                $('#file_upload_image').attr("value",jsonstr);
+            }
+        }
+
+
+    });
+});

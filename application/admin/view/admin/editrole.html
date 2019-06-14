@@ -1,0 +1,147 @@
+﻿{include file="./admin-layout/header.html" /}
+<style>
+    .layui-form-label {
+		width: 120px;
+	}
+	.layui-form-item .layui-input-inline{
+		width:250px;
+	}
+	.bigImg {
+		display: none;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.3);
+		left: 0;
+		top: 0;
+		z-index: 1000;
+		position: fixed;
+	}
+</style>
+<div class="admin-main">
+    <!--点击图片放大-->
+    <div class="bigImg pos-fix">
+        <img src="">
+    </div>
+    <!--点击图片放大结束-->
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称：</label>
+            <div class="layui-input-inline">
+                <input type="hidden" name="id" value="{$info.id}" />
+                <input type="text" name="name" lay-verify="required" placeholder="请输入角色名称" value="{$info.name}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色描述：</label>
+            <div class="layui-input-inline" style="width:600px">
+                <textarea name="desc" style="resize:none" id="" class="layui-textarea">{$info.desc}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="float: initial;">权限分配：</label>
+            {volist name='auth' id='power'}
+            <div class="first" style="padding-left: 120px;">
+                <input type="checkbox" class="firs" lay-filter="powers" name="power[]" value="{$power.id}" title="{$power.name}" {eq name="power.select" value="1" }checked="" {/eq}> <div class="layui-field-box">
+                {volist name='power.children' id='second'}
+                <div class="layui-input-block parent" style="margin-left: 80px;">
+                    <div class="layui-input-inline" style="width:auto;">
+                        <input type="checkbox" class="pid" lay-filter="power" {if condition="$second.level eq 3" }lay-skin="primary" {/if} name="power[]" value="{$second.id}" title="{$second.name}" {eq name="second.select" value="1" }checked="" {/eq}> </div> {if condition="isset($second['children'])" } <div class="layui-input-inline son" style="width:auto;">
+                        {volist name='second.children' id='child'}
+                        <div style="margin: 2% 0 0 0;float: left;">
+                            <input type="checkbox" lay-skin="primary" class="child" value="{$child.id}" lay-filter="powerss" name="power[]" title="{$child.name}" {eq name="child.select" value="1" }checked="" {/eq}> </div> {/volist} </div> {/if} </div> <hr class="layui-bg-orange" width="90%" style="margin-left: 5%;"> {/volist}
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="margin-left: 30px;text-align: center;">
+                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit="" lay-filter="submit">提交</button>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="javascript:history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                layui.use(['layer', 'form'], function () {
+                    var $ = layui.jquery,
+                        form = layui.form,
+                        layer = layui.layer; //独立版的layer无需执行这一句
+                    form.on('checkbox(power)', function (data) {
+                        var child = $(data.elem).parents('.parent').find('.son input[type="checkbox"]');
+                        child.each(function (index, item) {
+                            item.checked = data.elem.checked;
+                        });
+                        var first = $(data.elem).parents('.first').find('.firs');
+                        var length = $(data.elem).parents('.first').find('.child:checked').length;
+                        if (length > 1) {
+                            first.prop('checked', true);
+                        } else {
+                            if (!data.elem.checked && length == 1) {
+                                first.prop('checked', true);
+                            } else {
+                                if ($(data.elem).parents('.first').find('.pid:checked').length > 0) {
+                                    first.prop('checked', true);
+                                } else {
+                                    first.prop('checked', data.elem.checked);
+                                }
+                            }
+                        }
+                        form.render('checkbox');
+                    });
+                    form.on('checkbox(powers)', function (data) {
+                        var child = $(data.elem).parents('.first').find('.layui-field-box input[type="checkbox"]')
+                        child.each(function (index, item) {
+                            item.checked = data.elem.checked;
+                        });
+                        form.render('checkbox');
+                    });
+                    form.on('checkbox(powerss)', function (data) {
+                        var pid = $(data.elem).parents('.parent').find('.pid');
+                        var first = $(data.elem).parents('.first').find('.firs');
+                        var length = $(data.elem).parents('.parent').find('.child:checked').length;
+                        var length1 = $(data.elem).parents('.first').find('.child:checked').length;
+                        if (length1 >= 1) {
+                            if (length >= 1) {
+                                pid.prop('checked', true);
+                            } else {
+                                pid.prop('checked', data.elem.checked);
+                            }
+                            first.prop('checked', true);
+                        } else {
+                            if (length == 0) {
+                                pid.prop('checked', data.elem.checked);
+                            }
+                            first.prop('checked', data.elem.checked);
+                        }
+                        form.render('checkbox');
+                    });
+                    //提交
+                    form.on('submit(submit)', function (data) {
+                        $.ajax({
+                            url: "{:url('editrole')}",
+                            type: "POST",
+                            data: data.field,
+                        }).done(function (data) {
+                            if (data.result == 0) {
+                                layer.msg(data.message, {
+                                    icon: 1,
+                                    time: 3000
+                                }, function () {
+                                    location.href = data.url;
+                                });
+                            } else {
+                                layer.msg(data.message, {
+                                    icon: 2,
+                                    time: 3000
+                                });
+                            }
+                        }).error(function (data) {
+                            layer.msg('错误', {
+                                icon: 2,
+                                content: '服务器错误'
+                            });
+                        });
+                    });
+                });
+            </script>

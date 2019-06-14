@@ -1,0 +1,131 @@
+{include file="./admin-layout/header.html" /}
+<style>
+	.layui-form-label {
+		width: 120px;
+	}
+</style>
+<div class="admin-main">
+	<div class="layui-form">
+		<table class="layui-table" id="list-table">
+			<thead>
+				<tr>
+					<th>参数名</th>
+					<th>配置描述</th>
+					<th>值</th>
+					<th>更新时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name='list' id='data'}
+				<tr>
+					<td>{$data.name}</td>
+					<td>
+						{$data.title}
+					</td>
+					<td>
+						{if condition="$data.id eq 1||$data.id eq 5||$data.id eq 6"}
+						<input type="text" class="layui-input" value="{$data.value}" style="width: 400px;" onchange="ajaxUpdateField('admin_config','id','{$data.id}','value',this);">
+						{elseif condition="$data.id eq 2||$data.id eq 3||$data.id eq 4"}
+						<input type="number" class="layui-input" value="{$data.value}" style="width: 400px;" onchange="ajaxUpdateField('admin_config','id','{$data.id}','value',this);">
+						{elseif condition="$data.id eq 7"}
+						{if condition="$data.value"}
+						<span class="box">
+						<a href="{:IMG_PATH}{$data.value}">
+						<i class="layui-icon" style="font-size: 20px;">&#xe621;</i>
+						</a></span>
+						<button class="layui-btn layui-btn-xs upload_file" option-id="{$data.id}" type="button" style="border:none;background-color: rgba(0,0,0,0);color:blue">上传</button>
+						{else/}
+						<span class="box"></span>
+						<button class="layui-btn layui-btn-xs upload_file" option-id="{$data.id}" type="button" style="border:none;background-color: rgba(0,0,0,0);color:blue">上传</button>
+						{/if}
+						{/if}
+					</td>
+					<td>{$data.update_time}</td>
+				</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</div>
+	<div class="am-cf">
+		<div class="am-fr over-h" id="rng">
+			{empty name="list"} {else /} {$list|raw} {/empty}
+		</div>
+	</div>
+</div>
+<script>
+	layui.use(['layer', 'form','upload'], function() { //独立版的layer无需执行这一句
+		var $ = layui.jquery,
+			form = layui.form,
+			upload = layui.upload,
+			layer = layui.layer; //独立版的layer无需执行这一句
+		//上传文件
+		$('.upload_file').each(function(e) {
+			var obj = $('.upload_file').eq(e);
+			var optionid = obj.attr('option-id');
+			upload.render({
+			    elem: obj,
+			    url: "{:url('Upload/uploadFile')}",
+			    accept: 'file',
+			    exts:'apk',
+			    done: function(res){
+			      	$.ajax({
+						url: "{:url('changeTableVal')}",
+						type: "POST",
+						data: {
+							'table': 'admin_config',
+							'id_name': 'id',
+							'id_value': optionid,
+							'field': 'value',
+							'value': res.resData.path,
+						}
+					}).done(function(data) {
+						if(data.result == 0) {
+							layer.msg('上传成功');
+							var newhtml = '<a href="'+res.resData.pathurl+'"><i class="layui-icon" style="font-size: 20px;">&#xe621;</i></a>';
+							obj.parent().find('.box').html(newhtml);
+						} else {
+							layer.msg(data.message, {
+								icon: 2,
+								time: 3000
+							});
+						}
+					}).error(function(data) {
+						layer.msg('错误', {
+							icon: 2,
+							content: '服务器错误'
+						});
+					});
+			    }
+			});
+		})
+
+	});
+	window.ajaxUpdateField = function(table, id_name, id_value, field, obj) {
+		var value = obj.value;
+		$.ajax({
+			url: "{:url('changeTableVal')}",
+			type: "POST",
+			data: {
+				'table': table,
+				'id_name': id_name,
+				'id_value': id_value,
+				'field': field,
+				'value': value
+			}
+		}).done(function(data) {
+			if(data.result == 0) {
+				layer.msg('修改成功');
+			} else {
+				layer.msg(data.message, {
+					icon: 2,
+					time: 3000
+				});
+			}
+		}).error(function(data) {
+			layer.msg('错误', {
+				icon: 2,
+				content: '服务器错误'
+			});
+		});
+	}
+</script>

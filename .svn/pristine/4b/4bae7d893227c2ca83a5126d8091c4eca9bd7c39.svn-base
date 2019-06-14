@@ -1,0 +1,43 @@
+<?php
+
+	namespace wxsdk;
+	use wxsdk\wxsdk;
+
+	/**
+	 * 微信基础接口，包括微信三方登录和获取微信后台操作token等
+	 */
+	class wxmenu {
+		public function __construct() {
+			$this -> appId = 'wx8d74f46c44f81f2c';
+			$this -> appSecret = 'faac31883c62d35772b4f1ca6f343714';
+			$wxsdk = new wxsdk();
+			$this -> access_token = $wxsdk -> getAccessToken();
+			$this -> access_token = $this -> access_token['access_token'];
+		}
+		/**
+		 * 自定义创建微信菜单
+		 */
+		public function create_menu($menu){
+			$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" . $this -> access_token;
+			$result = $this -> httpsRequest($url, json_encode($menu, JSON_UNESCAPED_UNICODE));
+			return json_decode($result,true);
+		}
+		/**
+		 * http请求
+		 */
+		private function httpsRequest($url, $data = null) {
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, $url);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+			if (!empty($data)) {
+				curl_setopt($curl, CURLOPT_POST, 1);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+			}
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			$output = curl_exec($curl);
+			curl_close($curl);
+			return $output;
+		}
+
+	}

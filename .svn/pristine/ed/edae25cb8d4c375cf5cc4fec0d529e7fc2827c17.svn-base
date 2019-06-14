@@ -1,0 +1,415 @@
+<?php
+
+namespace wxsdk;
+use think\Log;
+
+/**
+ * 微信基础接口，包括微信三方登录和获取微信后台操作token等
+ */
+class wxsdk {
+	public function __construct() {
+		$this -> appId = 'wxa72808045ca703b2';
+		$this -> appSecret = '10edd2d6a4294afebdecd1a5c8ad3156';
+	}
+
+	/**
+	 * 获取微信网页调用jsAPI的config签名
+	 */
+	public function getSignPackage($url) {
+		$jsapiTicket = $this -> getJsApiTicket();
+		$timestamp = time();
+		$nonceStr = $this -> createNonceStr();
+		// 这里参数的顺序要按照 key 值 ASCII 码升序排序
+		$string = "jsapi_ticket=$jsapiTicket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
+		$signature = sha1($string);
+		$signPackage = array("appId" => $this -> appId, "nonceStr" => $nonceStr, "timestamp" => $timestamp,"signature" => $signature, "rawString" => $string);
+		return $signPackage;
+	}
+
+	/*
+	 * 获取用户基本信息
+	 */
+	public function getUserInfo($openid) {
+		$accessres = $this -> getAccessToken();
+		if (empty($accessres))
+			return null;
+		$accessToken = $accessres['access_token'];
+		$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$accessToken&openid=$openid&lang=zh_CN";
+		$res = json_decode($this -> httpGet($url), true);
+		if (isset($res['errcode'])) {
+			\think\Log::record($res, 'wx_getuserinfo');
+			return null;
+		} else
+			return $res;
+	}
+
+	/*
+	 * 通过用户第三方登录授权码来获取用户基本信息
+	 */
+	public function getOauthUserInfo($code, $remember = true) {
+		$oauthres = $this -> getOauthAccessToken($code, $remember);
+		if (empty($oauthres)) {
+			return null;
+		} else {
+			if ($oauthres['scope'] == "snsapi_base") {
+				unset($oauthres['access_token']);
+				return $oauthres;
+			}
+		}
+		//获取用户信息
+		$openid = $oauthres['openid'];
+		$accessToken = $oauthres['access_token'];
+		$url = "https://api.weixin.qq.com/sns/userinfo?access_token=$accessToken&openid=$openid&lang=zh_CN";
+		$res = json_decode($this -> httpGet($url), true);
+		if (isset($res['errcode'])) {
+			\think\Log::record($res['errcode'], 'wx');
+			return null;
+		} else {
+			return $res;
+		}
+	}
+
+	/**
+	 * 获取服务连接微信后台的AccessToken
+	 */
+	public function getAccessToken() {
+		$access_token = cache('wx_access_token');
+		if (empty($access_token)) {
+			// 如果是企业号用以下URL获取access_token
+			// $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$this->appId&corpsecret=$this->appSecret";
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$this->appId&secret=$this->appSecret";
+			$access_token = json_decode($this -> httpGet($url), true);
+			\think\Log::record($access_token, 22222222222);
+			if (isset($access_token['access_token'])) {
+				cache('wx_access_token', $access_token, 7000);
+			} else {
+				\think\Log::record($access_token['errcode'], 'wx_getaccesstoken');
+				\think\Log::record($access_token['errmsg'], 'wx_getaccesstoken');
+				return null;
+			}
+			\think\Log::record(json_encode($access_token), 'wx_getaccesstoken');
+		}
+		return $access_token;
+	}
+
+	/**
+	 * 第三方登录微信
+	 * @param $code wap端用户授权平台获取换取微信用户access_token的临时码
+	 * @return 返回临时票据信息array(access_token,openid..)
+	 *
+	 */
+	protected function getOauthAccessToken($code, $remember = true) {
+		$url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=$this->appId&secret=$this->appSecret&code=$code&grant_type=authorization_code";
+		$res = json_decode($this -> httpGet($url), true);
+		if (isset($res['errcode'])) {
+			\think\Log::record($res['errcode'], 'wx');
+			return null;
+		} else {
+			//记录session
+			$res['expires_at'] = $_SERVER['REQUEST_TIME'] + $res['expires_in'];
+			if ($remember) {
+				session('wx_access_token', $res);
+			}
+			return $res;
+		}
+	}
+
+	private function createNonceStr($length = 16) {
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$str = "";
+		for ($i = 0; $i < $length; $i++) {
+			$str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+		}
+		return $str;
+	}
+
+	/*
+	 * 公众号用于调用微信JS接口的临时票据
+	 */
+	private function getJsApiTicket() {
+		$jsapi_ticket = cache('wx_jsapi_ticket');
+		if (empty($jsapi_ticket)) {
+			$accessres = $this -> getAccessToken();
+			if (empty($accessres)) {
+				return null;
+			}
+			$accessToken = $accessres['access_token'];
+			// 如果是企业号用以下 URL 获取 ticket
+			// $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
+			$url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=$accessToken";
+			$res = json_decode($this -> httpGet($url), true);
+			if (isset($res['ticket'])) {
+				$jsapi_ticket = $res['ticket'];
+				cache('wx_jsapi_ticket', $jsapi_ticket, 7000);
+			}
+		}
+		return $jsapi_ticket;
+	}
+
+	/*
+	 * xml转数组
+	 */
+	public function FromXml($xml) {
+		if (!$xml) {
+			throw new WxPayException("xml数据异常！");
+		}
+		//将XML转为array
+		//禁止引用外部xml实体
+		libxml_disable_entity_loader(true);
+		$values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+		return $values;
+	}
+
+	/*
+	 * post请求
+	 * */
+	private function httpPost($url, $data = null) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		if (!empty($data)) {
+			curl_setopt($curl, CURLOPT_POST, 1);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+		}
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($curl);
+		curl_close($curl);
+		return $output;
+	}
+
+	private function httpGet($url) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 500);
+		// 为保证第三方服务器与微信服务器之间数据传输的安全性，所有微信接口采用https方式调用，必须使用下面2行代码打开ssl安全校验。
+		// 如果在部署过程中代码在此处验证失败，请到 http://curl.haxx.se/ca/cacert.pem 下载新的证书判别文件。
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($curl, CURLOPT_URL, $url);
+
+		$res = curl_exec($curl);
+		curl_close($curl);
+
+		return $res;
+	}
+
+	/*
+	 * 获取所有的素材
+	 */
+	public function getAllMaterial($type) {
+		$accessres = $this -> getAccessToken();
+		$data = array();
+		if (empty($accessres)) {
+			return null;
+		}
+		$accessToken = $accessres['access_token'];
+		$url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=$accessToken";
+		if($type=='music'){
+			$data['type'] = 'voice';
+			$data['offset'] = 0;
+		}else{
+			$data['type'] = $type;
+			$data['offset'] = 0;
+		}
+		$data['count'] = 1;
+		$res = $this -> httpPost($url, json_encode($data));
+		$result = json_decode($res, true);
+		if (isset($result['errcode'])) {
+			\think\Log::record($result, 'getAllMaterial');
+			return null;
+		} else {
+			return $result;
+		}
+	}
+
+	/*
+	 * 被动回复文本消息
+	 */
+	public function sendText($data, $content) {
+		$xmlText = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>";
+		$result = sprintf($xmlText, $data['FromUserName'], $data['ToUserName'], time(), $content);
+		echo $result;
+		exit ;
+	}
+
+	/*
+	 * 被动回复图片消息
+	 */
+	public function sendImg($data, $media_id = '') {
+		//获取图片media_id（测试）
+		if (empty($media_id)) {
+			$img = $this -> getAllMaterial('image');
+			if (!empty($img)) {
+				$media_id = isset($img['item'][0]) ? $img['item'][0]['media_id'] : '';
+			}
+		}
+		if (empty($media_id)) {
+			$this -> sendText($data, '抱歉，图片回复正在开发中。。。');
+		}
+		$itemTpl = "<Image><MediaId><![CDATA[%s]]></MediaId></Image>";
+		$item_str = sprintf($itemTpl, $media_id);
+		$xmlImg = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[image]]></MsgType>$item_str</xml>";
+		$result = sprintf($xmlImg, $data['FromUserName'], $data['ToUserName'], time());
+		echo $result;
+		exit ;
+	}
+
+	/*
+	 * 回复视频消息
+	 */
+	public function sendVideo($data, $content = array()) {
+		//获取图片media_id（测试）
+		if (empty($content)) {
+			$video = $this -> getAllMaterial('video');
+			if (!empty($video)) {
+				$media_id = isset($video['item'][0]) ? $video['item'][0]['media_id'] : '';
+				if (!empty($media_id)) {
+					$content = array('media_id' => $media_id, 'title' => $video['item'][0]['name'], 'description' => '本视频用于测试');
+				}
+			}
+		}
+		if (empty($content)) {
+			$this -> sendText($data, '抱歉，视频回复正在开发中。。。');
+		}
+		$itemTpl = "<Video><MediaId><![CDATA[%s]]></MediaId><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description></Video>";
+		$item_str = sprintf($itemTpl, $content['media_id'], $content['title'], $content['description']);
+		$xmlVideo = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[video]]></MsgType>$item_str</xml>";
+		$result = sprintf($xmlVideo, $data['FromUserName'], $data['ToUserName'], time());
+		echo $result;
+		exit ;
+	}
+
+	/*
+	 * 回复语音消息
+	 */
+	public function sendVoice($data,$media_id=""){
+		//获取图片media_id（测试）
+		if (empty($media_id)) {
+			$voice = $this -> getAllMaterial('voice');
+			if (!empty($voice)) {
+				$media_id = isset($voice['item'][0]) ? $voice['item'][0]['media_id'] : '';
+			}
+		}
+		if (empty($media_id)) {
+			$this -> sendText($data, '抱歉，语音回复正在开发中。。。');
+		}
+		$itemTpl = "<Voice><MediaId><![CDATA[%s]]></MediaId></Voice>";
+		$item_str = sprintf($itemTpl,$media_id);
+		$xmlVoice = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[voice]]></MsgType>$item_str</xml>";
+		$result = sprintf($xmlVoice, $data['FromUserName'], $data['ToUserName'], time());
+		echo $result;
+		exit ;
+	}
+	/*
+	 * 回复音乐消息
+	 */
+	public function sendMusic($data,$content=array()){
+		$content = array(
+			'title'=>'消愁',
+			'description'=>'欢迎您！',
+			'music_url'=>'http://ysp.lanhaihui.net/public/uploads/music/music.mp3',
+			'hq_music_url'=>'http://ysp.lanhaihui.net/public/uploads/music/music.mp3',
+		);
+		if (empty($content)) {
+			$this -> sendText($data, '抱歉，音乐回复正在开发中。。。');
+		}
+		$itemTpl = "<Music><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><MusicUrl><![CDATA[%s]]></MusicUrl><HQMusicUrl><![CDATA[%s]]></HQMusicUrl></Music>";
+		$item_str = sprintf($itemTpl,$content['title'],$content['description'],$content['music_url'],$content['hq_music_url']);
+		$xmlMusic = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[music]]></MsgType>$item_str</xml>";
+		$result = sprintf($xmlMusic, $data['FromUserName'], $data['ToUserName'], time());
+		echo $result;
+		exit ;
+	}
+	/*
+	 * 回复图文消息
+	 */
+	public function sendImgText($data,$content=array()){
+		$itemTpl = "<item><Title><![CDATA[%s]]></Title><Description><![CDATA[%s]]></Description><PicUrl><![CDATA[%s]]></PicUrl><Url><![CDATA[%s]]></Url></item>";
+		$content = array(
+			array('title'=>'图文1','description'=>'测试图文1','pic_url'=>'http://ysp.lanhaihui.net/public/uploads/imgs/img1.png','url'=>'https://www.baidu.com'),
+//			array('title'=>'图文2','description'=>'测试图文2','pic_url'=>'http://ysp.lanhaihui.net/public/uploads/imgs/img2.png','url'=>'https://www.tmall.com'),
+		);
+		$item_str = "";
+		foreach($content as $val){
+			$item_str .= sprintf($itemTpl, $val['title'], $val['description'], $val['pic_url'], $val['url']);
+		}
+		$xmlImgText = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>%s</ArticleCount><Articles>$item_str</Articles></xml>";
+		$result = sprintf($xmlImgText, $data['FromUserName'], $data['ToUserName'], time(), count($content));
+		echo $result;
+		exit ;
+	}
+	/*
+	 * 生成带参数的二维码
+	 * $action(场景说明)$user_id用户id
+	 */
+	public function WxQrcode($data,$action,$user_id){
+		$imgurl = cache($action.'_'.$user_id);
+		\think\Log::record($imgurl, 'first');
+		if(empty($imgurl)){
+			$accessres = $this -> getAccessToken();
+			if (empty($accessres)) {
+				return null;
+			}
+			$accessToken = $accessres['access_token'];
+			$url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=$accessToken";//获取二维码ticket
+			$qr_data = array();
+			$qr_data['expire_seconds'] = 2592000;//30天
+			$qr_data['action_name'] = 'QR_STR_SCENE';//临时的字符串参数值
+			$qr_data['action_info'] = array('scene'=>array('scene_str'=>$action.'_'.$user_id));
+			$res = $this -> httpPost($url, json_encode($qr_data));
+			$result = json_decode($res, true);
+			if (isset($result['ticket'])) {
+				$ticket = $result['ticket'];
+				$imgurl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=".urlencode($ticket);//获取二维码图片路径
+				cache($action.'_'.$user_id,$imgurl,2592000);
+			} 
+		}
+		$img_url = $this -> shortUrl($imgurl);
+		\think\Log::record($img_url, 'second');
+		$this -> sendText($data,$img_url);
+	}
+	/*
+	 * 发送模板消息
+	 * 
+	 */
+	public function sendTemplate($data){
+		$accessres = $this -> getAccessToken();
+		if (empty($accessres)) {
+			return null;
+		}
+		$accessToken = $accessres['access_token'];
+		$url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=$accessToken";
+		$res = $this -> httpPost($url, json_encode($data));
+		$result = json_decode($res, true);
+		if ($result['errcode']!=0) {
+			\think\Log::record($result, '发送模板消息');
+		}
+	}
+	/*
+	 * 长链接转短链接
+	 * 
+	 */
+	public function shortUrl($long_url){
+		$accessres = $this -> getAccessToken();
+		if (empty($accessres)) {
+			return null;
+		}
+		$accessToken = $accessres['access_token'];
+		$url = "https://api.weixin.qq.com/cgi-bin/shorturl?access_token=$accessToken";
+		$param = array(
+			'action' => 'long2short',
+			'long_url' => $long_url
+		);
+		$res = $this -> httpPost($url, json_encode($param));
+		$result = json_decode($res, true);
+		\think\Log::record($result,'短链接');
+		if ($result['errcode']!=0) {
+			\think\Log::record($result, '长链接转短链接');
+		}else{
+			return $result['short_url'];
+		}
+	}
+	
+
+}

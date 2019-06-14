@@ -1,0 +1,13 @@
+<?php
+namespace app\admin\controller;
+use app\admin\controller\Common;
+use think\Db;
+use think\facade\Request;
+class User extends Common {
+    public function userlist() {
+        Cookie('Userlist', request() -> url());
+        $re = config('paginate');
+        
+        return $this->fetch();
+    }
+}

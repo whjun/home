@@ -1,0 +1,106 @@
+{include file="./admin-layout/header.html" /}
+<style>
+    .layui-form-label{
+        width: auto;
+    }
+</style>
+<div class="admin-main">
+    <div class="layui-form">
+        <blockquote class="layui-elem-quote" style="font-size: 12px;">
+            <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 80px;">
+                <form method="get" action="">
+                    <div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">设备编号：</label>
+                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入设备编号搜索" autocomplete="off">
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">设备名称：</label>
+                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入设备名称搜索" autocomplete="off">
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">负责人：</label>
+                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入支付宝ID搜索" autocomplete="off">
+                        </div>
+                        
+                    </div>
+                    <div style="float: left">
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">所属医院：</label>
+                            <div class="layui-input-block" style="width: 160px;margin-left: 90px;">
+                                <select name="city" lay-verify="">
+                                    <option value="">请选择所属医院</option>
+                                    {foreach name="hospital" item="val"}
+                                    <option value="{$val.id}">{$val.hospital_name}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" style="margin-left: 90px"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        </div>
+                    </div>
+                </form>
+                {foreach name="menulist" item="val"} {if condition="$val.url eq 'Equipment/addfault'"}
+                <div class="layui-input-inline" style="width: auto;">
+                <a class="layui-btn layui-btn-normal" href='{:url("addfault")}'><i class="layui-icon">&#xe608;</i>{$val.title}</a>
+                </div>
+                {/if}{/foreach}
+            </div>
+        </blockquote>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                <th>所属医院</th>
+                <th>设备编号</th>
+                <th>设备地区</th>
+                <th>柜门名称</th>
+                <th>故障类型</th>
+                <th>故障描述</th>
+                <th>联系人</th>
+                <th>联系人电话</th>
+                <th>设备负责人</th>
+                <th>负责人联系电话</th>
+                <th>操作</th>
+                </tr> 
+            </thead>
+            <tbody>
+                <tr style="height: 70px">
+                    <td colspan="11">
+                        <span>保修单号：1009201804041298</span>
+                        <span style="margin-left: 97px;color: gray;">2019-04-04 12：12：12</span>
+                        <span style="float: right;margin-right: 10px;">报修处理中</span>
+                    </td>
+                </tr>
+                <tr style="height: 70px">
+                    <td>沂水人民医院</td>
+                    <td>1009201804041298</td>
+                    <td>山东省临沂市沂水县</td>
+                    <td>沂水人民医院一楼1号柜门</td>
+                    <td>无法开门</td>
+                    <td>归还时柜门没有打开，无法关闭</td>
+                    <td>小红</td>
+                    <td>1566666666</td>
+                    <td>周二</td>
+                    <td>15666666666</td>
+                    <td>处理完成</td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="fault" style="display: none">
+            
+        </div>
+    </div>
+</div>
+<script>
+        //Demo
+        layui.use('form', function(){
+            var form = layui.form;
+            
+            //监听提交
+            form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+            });
+        });
+    </script>

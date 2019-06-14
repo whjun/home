@@ -1,0 +1,130 @@
+{include file="./admin-layout/header.html" /}
+<style>
+.layui-btn layui-btn-xs{
+    background-color: snow;color: blue;
+}
+</style>
+<div class="admin-main">
+    <div class="layui-form">
+        <blockquote class="layui-elem-quote" style="font-size: 12px;">
+            <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 80px;">
+                <form method="get" action="">
+                    <div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">设备编号</label>
+                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入设备编号搜索" autocomplete="off">
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">设备名称</label>
+                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入设备名称搜索" autocomplete="off">
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">负责人</label>
+                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入支付宝ID搜索" autocomplete="off">
+                        </div>
+                        <button id="demo">点击</button>
+                        <button class="layui-btn layui-btn-normal" style="margin-left: 30px;"><i class="layui-icon">&#xe615;</i> 查询</button>
+                    </div>
+                    <div style="float: left">
+                        <label class="layui-form-label">所在地区</label>
+                        <div class="layui-input-inline">  
+                            <select name="province" lay-filter="province" class="province">  
+                                <option value="">请选择省</option>  
+                            </select>  
+                        </div>  
+                        <div class="layui-input-inline">  
+                            <select name="city" lay-filter="city" disabled>  
+                                <option value="">请选择市</option>  
+                            </select>  
+                        </div>  
+                        <div class="layui-input-inline">  
+                            <select name="area" lay-filter="area" disabled>  
+                                <option value="">请选择县/区</option>  
+                            </select>  
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block" style="width: 101px;margin-left: 80px;">
+                                <select name="city" lay-verify="">
+                                    <option value="">全部</option>
+                                    <option value="1">正常</option>
+                                    <option value="2">不正常</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                            <label class="layui-form-label">所属医院</label>
+                            <div class="layui-input-block" style="width: 200px;margin-left: 80px;">
+                                <select name="city" lay-verify="">
+                                    <option value="">请选择所属医院</option>
+                                    {foreach name="hospital" item="val"}
+                                    <option value="{$val.id}">{$val.hospital_name}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </blockquote>
+        <table class="layui-table">
+            <thead>
+                <th>设备编号</th>
+                <th>设备名称</th>
+                <th>设备地区</th>
+                <th>所属医院</th>
+                <th>柜门</th>
+                <th>负责人</th>
+                <th>负责人电话</th>
+                <th>状态</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+                {volist name='list' id='val'}
+                <tr>
+                    <td>{$val.equipment_no}</td>
+                    <td>{$val.equipment_name}</td>
+                    <td>{$val.area_id}</td>
+                    <td>{$val.hospital_name}</td>
+                    <td>{$val.model_num}</td>
+                    <td>{$val.charge_name}</td>
+                    <td>{$val.charge_phone}</td>
+                    <td>
+                        {if condition='$val.status eq 1'}
+                        <span style="color: black;font-weight: bold;font-size: 14px;">正常</span>
+                        {/if}{if condition='$val.status eq 2'}
+                        <span style="color: red;font-weight: bold;font-size: 14px;">不正常</span>
+                        {/if}
+                    </td>
+                    <td>
+                        <div class="layui-input-inline">
+                            <a href='{:url("editequipment",["id"=>$val.id,"device_id"=>$val.device_id])}' class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">编辑</a>
+                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">启用</a>
+                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">一件开门</a>
+                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">生成二维码</a>
+                        </div>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        // return false;
+        });
+    });
+    layui.config({  
+        base : "src/" //address.js的路径  
+    }).use([ 'layer', 'jquery', "address" ], function() {  
+        var layer = layui.layer, $ = layui.jquery, address = layui.address();  
+
+    }); 
+</script>

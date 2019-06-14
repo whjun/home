@@ -1,0 +1,82 @@
+<?php
+namespace app\admin\controller;
+use app\admin\controller\Common;
+use think\Db;
+use think\facade\Request;
+use app\admin\model\EquipmentHospitalModel;
+class Equipment extends Common {
+
+    /**
+     * 设备列表
+     */
+    public function equipmentlist(){
+        Cookie('Equipment', request() -> url());
+        $region = Db::name('admin_region') -> where('pid',0) -> select();
+        $hospital = Db::name('hospital') -> select();
+        $this -> assign('region',$region);
+        $this -> assign('hospital',$hospital);
+        return $this -> fetch();
+    }
+    /**
+     * 医院管理
+     */
+    public function equipmenthospital() {
+        Cookie('Equipmenthospital', request() -> url());
+        $re = config();
+        $level = input('level', 1);
+        $id = input('id');
+        $parentid = input('parentid', 0);
+        $where = array();
+        if(empty($id)){
+            $where['level'] = $level;
+            $this -> assign('level',$level);
+         }else{
+             $where['level'] = array('gt', $level);
+             $where['pid'] = $id;
+             $this -> assign('level', ++$level);
+         }
+         $list = Db::name('hospital') -> field('h.id,h.hospital_name,h.desc,count(d.hospital_id) count') -> alias('h') -> join('device d','h.id = d.hospital_id','LEFT') -> order('h.id asc') -> group('h.id') -> paginate($re, false, array('query' => request() -> param()));
+         $this -> assign('pid', $parentid);
+         $this -> assign('list', $list);
+        return $this -> fetch();
+    }
+    /**
+     * 添加医院
+     */
+    public function addhospital() {
+        $data = input('post.');
+        $model = new EquipmentHospitalModel();
+        $res = $model -> allowField(true) -> save($data);
+        if($res) {
+            AjaxJson('操作成功', 0, 1, Cookie('Equipmenthospital'));
+        } else {
+            AjaxJson('操作失败');
+        }
+    }
+    /**
+     * 删除医院
+     */
+    public function deletehospital() {
+        $id = input("id");
+        $model = new EquipmentHospitalModel();
+        $res = Db::name('hospital') -> delete($id);
+        if($res) {
+            AjaxJson('删除成功', 0, 1, Cookie('Equipmenthospital'));
+        } else {
+            AjaxJson('删除失败');
+        }
+    }
+    /**
+     * 编辑医院
+     */
+    public function edithospital() {
+        $data = input('post.');
+        $model = new EquipmentHospitalModel();
+        $res = $model -> allowField(true) -> save ($data,array('id'=>$data['id']));
+        if ($res) {
+			AjaxJson('操作成功', 0, 1, Cookie('Equipmenthospital'));
+		} else {
+			AjaxJson('操作失败');
+		}
+    }
+}
