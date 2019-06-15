@@ -79,20 +79,22 @@
                 </div>
             </blockquote>
             <blockquote class="layui-elem-quote" style="font-size: 12px;">
+                {volist name="list" id="v"}
                 <label class="layui-form-label" style="width: auto">免费时长：</label>
                 <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="jian()" id="num1">-</button>
                 <div class="layui-input-inline" style="width:auto;">
-                    <input type="text" class="layui-input" style="width:80px" name="free_time" id="num" value="0" placeholder="选择时长" autocomplete="off">
+                    <input type="text" class="layui-input" style="width:80px" name="free_time" id="num" value="{$v.free_time}" placeholder="选择时长" autocomplete="off">
                 </div>
                 <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="jia()" id="num2">+</button>
                 <span style="margin-right: 120px;">分钟</span>
                 <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
-                    <label class="layui-form-label" style="width: auto">计费金额：</label>
-                    <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="money" id="name" value="" placeholder="金额" autocomplete="off">  
-                    元 / 
-                    <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="minute" id="name" value="" placeholder="时间" autocomplete="off">
-                    <span style="margin-right: 120px;">分钟</span>
+                <label class="layui-form-label" style="width: auto">计费金额：</label>
+                <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="money" id="name" value="{empty name='$v.money'}0{/empty}{$v.money}" placeholder="金额" autocomplete="off">  
+                元 / 
+                <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="minute" id="name" value="{empty name='$v.minute'}0{/empty}{$v.minute}" placeholder="时间" autocomplete="off">
+                <span style="margin-right: 120px;">分钟</span>
                 </div>
+                {/volist}
             </blockquote>
             <blockquote class="layui-elem-quote" style="font-size: 12px;">
                 <table class="layui-table">
@@ -175,6 +177,7 @@
             $('#valShow').html(parseInt($('#valShow').html()) - 1)
         }
     }
+    //柜门编辑
     function editlock(id,lock_id,lock_name,status) {
         $("input[name='id']").attr('disabled',true).val(id);
         $("input[name='lock_id']").attr('disabled',true).val(lock_id);

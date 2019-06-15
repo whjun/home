@@ -1,4 +1,4 @@
-<?php /*a:2:{s:85:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\marketing\marketingcoupon.html";i:1560154003;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:85:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\marketing\marketingcoupon.html";i:1560589477;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -181,7 +181,7 @@
             <div class="layui-form-item" style="margin-top: 25px;">
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">优惠券名称：</label>
-                    <input type="text" name="coupon_name" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input" style="width: auto">
+                    <input type="text" id="coupon_name" name="coupon_name" placeholder="请输入优惠券名称" class="layui-input" style="width: auto">
                 </div>
                 <div class="layui-inline" style="margin-left: 42px;">
                     <label class="layui-form-label" style="width: auto">规则：</label>
@@ -248,7 +248,7 @@
             ,btnAlign: 'c'
             ,skin: 'open_class'
             ,yes: function(layero, index){
-                var coupon_name = $("input[name='coupon_name']").val();
+                var coupon_name = $("#coupon_name").val();
                 var max_money = $("input[name='max_money']").val();
                 var cut_money = $("input[name='cut_money']").val();
                 var start_time = $("input[name='start_time']").val();

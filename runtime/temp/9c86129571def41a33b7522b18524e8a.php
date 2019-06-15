@@ -1,4 +1,4 @@
-<?php /*a:2:{s:83:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmentlist.html";i:1560477900;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:83:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmentlist.html";i:1560585683;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -225,8 +225,12 @@
                     <td>
                         <div class="layui-input-inline">
                             <a href='<?php echo url("editequipment",["id"=>$val['id'],"device_id"=>$val['device_id']]); ?>' class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">编辑</a>
-                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">启用</a>
-                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">一件开门</a>
+                            <?php if($val['is_use'] == 1): ?>
+                            <a onclick="is_use('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['is_use']); ?>')" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">启用</a>
+                            <?php endif; if($val['is_use'] == 0): ?>
+                            <a onclick="is_use('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['is_use']); ?>')" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="is_use">禁用</a>
+                            <?php endif; ?>
+                            <a onclick="opendoor('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['device_id']); ?>')" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">一键开门</a>
                             <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">生成二维码</a>
                         </div>
                     </td>
@@ -323,5 +327,34 @@
         });
         
     });
-    
+    // 启用/禁用
+    function is_use(id,is_use) {
+        $.ajax({
+            url:"<?php echo url('is_use'); ?>",
+            data: {id:id,is_use:is_use},
+            success:function(data){
+                if(data == 1) {
+                    layer.msg('启用成功');
+                }else if(data == 2){
+                    layer.msg('该设备有异常，无法启动');
+                }
+                if(data == 0) {
+                    layer.msg('该设备有异常，无法启动');
+                }
+            }
+        })
+    }
+    function opendoor(id,device_id) {
+        $.ajax({
+            url: "<?php echo url('opendoor'); ?>",
+            data: {id:id,device_id:device_id},
+            success:function(data) {
+                if(data == 1) {
+                    layer.msg("开门成功");
+                }else{
+                    layer.msg("开门失败");
+                }
+            }
+        })
+    }
 </script>

@@ -1,4 +1,4 @@
-<?php /*a:2:{s:84:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmentfault.html";i:1560507721;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:84:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmentfault.html";i:1560568554;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -139,27 +139,26 @@
     <div class="layui-form">
         <blockquote class="layui-elem-quote" style="font-size: 12px;">
             <div class="layui-form-item" style="margin-bottom: 0px;margin-left: 80px;">
-                <form method="get" action="">
+                <form method="get" action="<?php echo url('equipmentfault'); ?>">
                     <div>
                         <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
                             <label class="layui-form-label">设备编号：</label>
-                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入设备编号搜索" autocomplete="off">
+                            <input type="text" class="layui-input" style="width:200px" name="equipment_no" id="name" value="" placeholder="请输入设备编号搜索" autocomplete="off">
                         </div>
                         <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
                             <label class="layui-form-label">设备名称：</label>
-                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入设备名称搜索" autocomplete="off">
+                            <input type="text" class="layui-input" style="width:200px" name="equipment_name" id="name" value="" placeholder="请输入设备名称搜索" autocomplete="off">
                         </div>
                         <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
                             <label class="layui-form-label">负责人：</label>
-                            <input type="text" class="layui-input" style="width:200px" name="filter" id="name" value="" placeholder="请输入支付宝ID搜索" autocomplete="off">
+                            <input type="text" class="layui-input" style="width:200px" name="charge_name" id="name" value="" placeholder="请输入负责人" autocomplete="off">
                         </div>
-                        
                     </div>
                     <div style="float: left">
                         <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
                             <label class="layui-form-label">所属医院：</label>
                             <div class="layui-input-block" style="width: 160px;margin-left: 90px;">
-                                <select name="city" lay-verify="">
+                                <select name="hospital_id" lay-verify="">
                                     <option value="">请选择所属医院</option>
                                     <?php if(is_array($hospital) || $hospital instanceof \think\Collection || $hospital instanceof \think\Paginator): if( count($hospital)==0 ) : echo "" ;else: foreach($hospital as $key=>$val): ?>
                                     <option value="<?php echo htmlentities($val['id']); ?>"><?php echo htmlentities($val['hospital_name']); ?></option>
@@ -236,9 +235,9 @@
                     <td><?php echo htmlentities($v['charge_phone']); ?></td>
                     <td>
                         <?php if($v['status'] == 0): ?>
-                        <span style="color: #b3aeae">处理完成</span>
+                        <a href="<?php echo url('editfaultstatus',['id'=>$v['id'],'status'=>$v['status']]); ?>" style="color: blue">处理完成</a>
                         <?php endif; if($v['status'] == 1): ?>
-                        <a href="<?php echo url('editfaultstatus',['id'=>$v['id'],'id'=>$v['status']]); ?>">处理完成</a>
+                        <span style="color: #afadad;">处理完成</span>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -252,7 +251,7 @@
             </div>
             <label class="layui-form-label">设备编号</label>
             <div class="layui-input-inline" style="width: 328px;margin-left: 14px;">
-                    <select name="equipment_no">
+                    <select lay-filter="equipment_no" id="equipment_no" name="equipment_no">
                         <option value="">选择设备编号</option>
                         <?php if(is_array($device) || $device instanceof \think\Collection || $device instanceof \think\Paginator): if( count($device)==0 ) : echo "" ;else: foreach($device as $key=>$vo): ?>
                         <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['equipment_no']); ?></option>
@@ -261,11 +260,11 @@
                 </div>
             <label class="layui-form-label">柜门编号</label>
             <div class="layui-input-inline" style="width: 328px;margin-left: 14px;">
-                <select name="lock_num">
-                    <option value="">选择问题柜门编号</option>
-                    <?php if(is_array($lock) || $lock instanceof \think\Collection || $lock instanceof \think\Paginator): if( count($lock)==0 ) : echo "" ;else: foreach($lock as $key=>$vo): ?>
+                <select name="lock_num" lay-filter="lock_num" id="lock_num">
+                    <!-- <option value="">选择问题柜门编号</option> -->
+                    <!-- <?php if(is_array($lock) || $lock instanceof \think\Collection || $lock instanceof \think\Paginator): if( count($lock)==0 ) : echo "" ;else: foreach($lock as $key=>$vo): ?>
                     <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['lock_num']); ?>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<?php echo htmlentities($vo['lock_name']); ?></option>
-                    <?php endforeach; endif; else: echo "" ;endif; ?>
+                    <?php endforeach; endif; else: echo "" ;endif; ?> -->
                 </select>
             </div>
             <label class="layui-form-label">保修类型</label>
@@ -346,7 +345,6 @@
                 data: field,
                 type: "POST"
             }).done(function(data) {
-                console.log(data);return;
                 if(data.result == 0){
                     layer.msg(data.message, {
                         icon: 1,
@@ -458,6 +456,28 @@
             $("#c").hide();
             
         });
-        
+        //根据设备编号获取柜门编号
+        form.on('select(equipment_no)', function(data) {
+            var id   = data.value;
+            $.ajax({
+                url : "<?php echo url('getlock_num'); ?>",
+                data : {id,id},
+                // dataType : "json",
+                success : function(d) {
+                    var tmp = '<option value="">--请选择--</option>';
+                    //改变第三级下拉框回复原样
+                    $("#lock_num").html(tmp);
+                    for ( var i in d) {
+                        tmp += '<option value="'+d[i].id+'">' + d[i].lock_num + '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;' + d[i].lock_name + '</option>';
+                    }
+                    $("#lock_num").html(tmp);
+                    form.render();
+                },
+                error:function(){
+                    layer.alert('请求失败，稍后再试', {icon: 5});
+                }
+            });
+        });
     });
+    
     </script>

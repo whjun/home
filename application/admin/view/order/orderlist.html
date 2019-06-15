@@ -62,7 +62,42 @@
                 </form>
             </div>
         </blockquote>
-        <table id="demo" lay-filter="test"></table>
+        <table class="layui-table" id="demo" lay-filter="test">
+            <thead>
+                <tr>
+                    <th>订单号</th>
+                    <th>租借时间</th>
+                    <th>所属医院</th>
+                    <th>计费规则</th>
+                    <th>使用时长</th>
+                    <th>收费方式</th>
+                    <th>租金金额</th>
+                    <th>优惠金额</th>
+                    <th>应付金额</th>
+                    <th>用户编号</th>
+                    <th>订单状态</th>
+                    <th>归还地点</th>
+                    <th>实付金额</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+        </table>
     </div>
 </div>
 <script>
@@ -83,33 +118,33 @@
             elem: '#test1' //指定元素
         });
         });
-        layui.use('table', function(){
-        var table = layui.table;
+    //     layui.use('table', function(){
+    //     var table = layui.table;
         
-        //第一个实例
-        table.render({
-            elem: '#demo'
-            ,height: 312
-            ,width: '100%'
-            ,url: '/demo/table/user/' //数据接口
-            ,page: true //开启分页
-            ,cols: [[ //表头
-            {field: 'id', title: '订单号', fixed: 'left',}
-            ,{field: 'username', title: '租借时间',}
-            ,{field: 'sex', title: '所属医院',}
-            ,{field: 'city', title: '计费规则',} 
-            ,{field: 'sign', title: '使用时长',}
-            ,{field: 'experience', title: '收费方式',}
-            ,{field: 'score', title: '租金金额',}
-            ,{field: 'classify', title: '优惠金额',}
-            ,{field: 'wealth', title: '应付金额',}
-            ,{field: 'wealth', title: '用户编号',}
-            ,{field: 'wealth', title: '订单状态',}
-            ,{field: 'wealth', title: '归还地点',}
-            ,{field: 'wealth', title: '实付金额',}
-            ,{field: 'wealth', title: '操作',}
-            ]]
-        });
+    //     //第一个实例
+    //     table.render({
+    //         elem: '#demo'
+    //         ,height: 312
+    //         ,width: '100%'
+    //         ,url: '/demo/table/user/' //数据接口
+    //         ,page: true //开启分页
+    //         ,cols: [[ //表头
+    //         {field: 'id', title: '订单号', fixed: 'left',}
+    //         ,{field: 'username', title: '租借时间',}
+    //         ,{field: 'sex', title: '所属医院',}
+    //         ,{field: 'city', title: '计费规则',} 
+    //         ,{field: 'sign', title: '使用时长',}
+    //         ,{field: 'experience', title: '收费方式',}
+    //         ,{field: 'score', title: '租金金额',}
+    //         ,{field: 'classify', title: '优惠金额',}
+    //         ,{field: 'wealth', title: '应付金额',}
+    //         ,{field: 'wealth', title: '用户编号',}
+    //         ,{field: 'wealth', title: '订单状态',}
+    //         ,{field: 'wealth', title: '归还地点',}
+    //         ,{field: 'wealth', title: '实付金额',}
+    //         ,{field: 'wealth', title: '操作',}
+    //         ]]
+    //     });
     
-    });
+    // });
 </script>

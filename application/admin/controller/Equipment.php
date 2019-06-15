@@ -53,12 +53,58 @@ class Equipment extends Common {
         }
         $region = Db::name('admin_region') -> where('pid',0) -> select();
         $hospital = Db::name('hospital') -> select();
-        $data = Db::name('device d') -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status,r.name')->join('hospital h','d.hospital_id = h.id','LEFT') -> join('admin_region r','d.area_id = r.id','LEFT') -> where($where) -> order('d.id asc') -> group('d.id') -> paginate($re, false, array('query' => request() -> param()));
-
+        $data = Db::name('device d') -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status,d.is_use,r.name')->join('hospital h','d.hospital_id = h.id','LEFT') -> join('admin_region r','d.area_id = r.id','LEFT') -> where($where) -> order('d.id asc') -> group('d.id') -> paginate($re, false, array('query' => request() -> param()));
         $this -> assign('region',$region);
         $this -> assign('hospital',$hospital);
         $this -> assign('list',$data);
         return $this -> fetch();
+    }
+    /**
+     * 一键开门
+     * @return boolean
+     */
+    public function opendoor(){
+        $device_id = input("device_id");
+        $lock_id = input("lock_id");
+        $id = input("id");
+        $LockApi = new LockApi();
+        $res = $LockApi -> lockOpen($device_id,$lock_id);
+        dump($res);
+        if($res) {
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    /**
+     * 设备启用禁用
+     * @return void
+     */
+
+    public function is_use() {
+        $id = input('id');
+        $is_use = input('is_use');
+        if($is_use == 1){
+            $data = Db::name('device d') ->where('d.id',$id) -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,d.hospital_id,d.model_num,d.charge_name,d.charge_phone,d.status,d.money,d.free_time,l.lock_num,l.lock_name') -> join('lock l','d.id = l.device_id') ->join('hospital h','d.hospital_id = h.id','LEFT') -> order('d.id asc') -> group('d.id') -> find();
+            // dump($data);
+            $money = $data['money'];
+            $data_money = explode('/',$money);
+            $count = count($data_money);
+            if($count == 1){
+                $money = '';
+                $minute = '';
+            }else if($count == 2){
+                $money = $data_money[0];
+                $minute = $data_money[1];
+            }
+            if($data['equipment_name'] !== '' && $data['charge_phone'] && $data['area_id'] !== '' && $data['charge_name'] && $data['hospital_id'] !== 0 && $data['hospital_id'] !== '' && $data['area_id'] !== '' && $data['area_id'] !== 0 && $data['free_time'] !== '' && $data['hospital_id'] !== '' && $money !== '' && $minute !== '' && $data['lock_num'] !== '' && $data['lock_name'] !== '') {
+                return 1;
+            }else{
+                return 2;
+            }
+        }else if($is_use == 0) {
+            return 0;
+        }
     }
     /**
      * 设备编辑
@@ -69,11 +115,16 @@ class Equipment extends Common {
         $id = input('id');
         $device_id = input('device_id');
         $re = config('paginate.list_rows');
-        $data[] = Db::name('device d') ->where('d.id',$id) -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status')->join('hospital h','d.hospital_id = h.id','LEFT') -> order('d.id asc') -> group('d.id') -> find();
+        $data[] = Db::name('device d') ->where('d.id',$id) -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status,d.money,d.free_time')->join('hospital h','d.hospital_id = h.id','LEFT') -> order('d.id asc') -> group('d.id') -> find();
         $hospital = Db::name('hospital') -> select();
         $lock = Db::name('lock') -> where('device_id',$id) ->order('lock_num asc') -> paginate($re, false, array('query' => request() -> param()));
         $region = Db::name('admin_region') -> where('pid',0) -> select();
-
+        $money = $data[0]['money'];
+        $data_money = explode('/',$money);
+        $money = $data_money[0];
+        $minute = $data_money[1];
+        $data[0]['money'] = $money;
+        $data[0]['minute'] = $minute;
         $this -> assign("list",$data);
         $this -> assign("hospital",$hospital);
         $this -> assign('lock',$lock);
@@ -160,18 +211,61 @@ class Equipment extends Common {
      */
     public function equipmentfault(){
         Cookie('Fault', request() -> url());
+        $equipment_no = input('equipment_no');
+        $equipment_name = input('equipment_name');
+        $charge_name = input('charge_name');
+        $hospital_id = input('hospital_id');
         $re = config('paginate.list_rows');
+        $where = array();
+        if(!empty('equipment_no')) {
+            $where[] = array("d.equipment_no",'like','%' . trim($equipment_no) . '%');
+        }
+        if(!empty('equipment_name')) {
+            $where[] = array("d.equipment_name",'like','%' . trim($equipment_name) . '%');
+        }
+        if(!empty('charge_name')) {
+            $where[] = array("d.charge_name",'like','%' . trim($charge_name) . '%');
+        }
+        if(!empty('hospital_id')) {
+            $where[] = array("h.id",'like','%' . trim($hospital_id) . '%');
+        }
         $hospital = Db::name('hospital') -> select();
         $region = Db::name('admin_region') -> where('pid',0) -> select();
         $lock = Db::name('lock') -> select();
         $device = Db::name('device') -> select();
-        $data = Db::name('fault f') -> field('f.id,f.fault_cause,f.fault_desc,f.create_time,f.user_name,f.oddnumbers,f.tel,f.status,h.hospital_name,d.equipment_no,d.charge_name,d.charge_phone,l.lock_name,r.name') -> join('device d', 'f.d_id = d.id',"LEFT") -> join('hospital h', 'd.hospital_id = h.id','LEFT') -> join('lock l','f.lock_id = l.id','LEFT') -> join('admin_region r','f.region_id = r.id','LEFT') -> order('f.id asc') -> paginate($re, false, array('query' => request() -> param()));
-        $this -> assign('list',$data);
+        $fault = Db::name('fault f') -> field('f.id,f.fault_cause,f.fault_desc,f.create_time,f.user_name,f.oddnumbers,f.tel,f.status,h.hospital_name,d.equipment_no,d.charge_name,d.charge_phone,l.lock_name,r.name') -> join('device d', 'f.d_id = d.id',"LEFT") -> join('hospital h', 'd.hospital_id = h.id','LEFT') -> join('lock l','f.lock_id = l.id','LEFT') -> join('admin_region r','f.region_id = r.id','LEFT') -> where($where) -> order('f.id asc') -> paginate($re, false, array('query' => request() -> param()));
+        $this -> assign('list',$fault);
         $this -> assign('device',$device);
         $this -> assign("lock",$lock);
         $this -> assign('region',$region);
         $this -> assign('hospital',$hospital);
         return $this -> fetch();
+    }
+    /**
+     * 通过设备id获取柜门信息
+     * @return void
+     */
+    public function getlock_num() {
+        $id = input("id");
+        $lock = Db::name('lock') -> where("device_id",$id) -> select();
+        return $lock;
+    }
+    /**
+     * 维修记录修改操作状态
+     * @return void
+     */
+    public function editfaultstatus() {
+        $id = input('id');
+        $status = input('status');
+        if($status == 1){
+            $status = 0;
+        }else if($status == 0){
+            $status = 1;
+        }
+        $res = Db::name('fault') -> where('id',$id) -> update(['status'=>$status]);
+        if($res){
+            $this -> redirect(Cookie('Fault'));
+        }
     }
     /**
      * 添加维修记录
@@ -180,7 +274,21 @@ class Equipment extends Common {
     public function addfault() {
         $data = input('post.');
         $datatime = date('Y-m-d h:i:s');
-        $oddnumbers = date('YmdHis') . rand(10000000,99999999);
+
+        @date_default_timezone_set("PRC");
+    
+        //订购日期
+        $order_date = date('Y-m-d');
+        //订单号码主体（YYYYMMDDHHIISSNNNNNNNN）
+        $order_id_main = date('YmdHis') . rand(10000000,99999999);
+        //订单号码主体长度
+        $order_id_len = strlen($order_id_main);
+        $order_id_sum = 0;
+        for($i=0; $i<$order_id_len; $i++){
+            $order_id_sum += (int)(substr($order_id_main,$i,1));
+        }
+        //唯一订单号码（YYYYMMDDHHIISSNNNNNNNNCC）
+        $oddnumbers = $order_id_main . str_pad((100 - $order_id_sum % 100) % 100,2,'0',STR_PAD_LEFT);
         $fault = [
             'region_id' => $data['data3'],
             'd_id' => $data['equipment_no'],
@@ -191,7 +299,11 @@ class Equipment extends Common {
             'oddnumbers' => $oddnumbers,
         ];
         $res = Db::name('fault') -> insert($fault);
-        dump($res);
+        if($res) {
+            AjaxJson('操作成功', 0, 1, Cookie('Fault'));
+        } else {
+            AjaxJson('操作失败');
+        }
     }
     /**
      * 医院管理

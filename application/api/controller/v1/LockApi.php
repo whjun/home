@@ -117,7 +117,9 @@ class LockApi extends Controller
      */
     public function lockOpen($device_id, $lock_id)
     {
+        return request()->url();
         $device_status = $this->deviceStatus($device_id);
+        return $device_status;
         if ($device_status === false) {
             $msg = ['code' => 0, 'msg' => '设备不在线'];
             return $msg;

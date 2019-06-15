@@ -104,8 +104,12 @@
                     <td>
                         <div class="layui-input-inline">
                             <a href='{:url("editequipment",["id"=>$val.id,"device_id"=>$val.device_id])}' class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">编辑</a>
-                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">启用</a>
-                            <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">一件开门</a>
+                            {if condition="$val.is_use eq 1"}
+                            <a onclick="is_use('{$val.id}','{$val.is_use}')" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">启用</a>
+                            {/if}{if condition="$val.is_use eq 0"}
+                            <a onclick="is_use('{$val.id}','{$val.is_use}')" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="is_use">禁用</a>
+                            {/if}
+                            <a onclick="opendoor('{$val.id}','{$val.device_id}')" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">一键开门</a>
                             <a href="" class="layui-btn layui-btn-xs" style="background-color: snow;color: blue;" lay-event="edit">生成二维码</a>
                         </div>
                     </td>
@@ -202,5 +206,34 @@
         });
         
     });
-    
+    // 启用/禁用
+    function is_use(id,is_use) {
+        $.ajax({
+            url:"{:url('is_use')}",
+            data: {id:id,is_use:is_use},
+            success:function(data){
+                if(data == 1) {
+                    layer.msg('启用成功');
+                }else if(data == 2){
+                    layer.msg('该设备有异常，无法启动');
+                }
+                if(data == 0) {
+                    layer.msg('该设备有异常，无法启动');
+                }
+            }
+        })
+    }
+    function opendoor(id,device_id) {
+        $.ajax({
+            url: "{:url('opendoor')}",
+            data: {id:id,device_id:device_id},
+            success:function(data) {
+                if(data == 1) {
+                    layer.msg("开门成功");
+                }else{
+                    layer.msg("开门失败");
+                }
+            }
+        })
+    }
 </script>

@@ -26,8 +26,18 @@ class Marketing extends Common{
     public function addcoupon(){
         $data = input("post.");
         $data['create_time'] = date('Y-m-d h:i:s');
+        $user = Db::name('user') -> select();
+        $count = count($user);
         $model = new MarketingCouponModel();
         $res = $model -> allowField(true) -> save($data);
+        $id = Db::name('coupon')->insertGetId($data);
+        foreach($user as $k => $v){
+            $coupon_by_user['coupon_id'] = $id;
+            $coupon_by_user['user_id'] = $v['id'];
+            $coupon_by_user['is_use'] = 0;
+            $coupon_by_user['create_time'] = date('Y-m-d h:i:s');
+            Db::name('coupon_by_user')->insert($coupon_by_user);
+        }
         if($res){
             AjaxJson('操作成功', 0, 1, Cookie('Coupon'));
         } else {

@@ -1,4 +1,4 @@
-<?php /*a:2:{s:87:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmenthospital.html";i:1560311161;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:87:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmenthospital.html";i:1560569271;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -167,11 +167,11 @@
                     <td><?php echo htmlentities($data['count']); ?></td>
                     <td><?php echo htmlentities($data['desc']); ?></td>
                     <td>
-                        <?php if(is_array($menulist) || $menulist instanceof \think\Collection || $menulist instanceof \think\Paginator): if( count($menulist)==0 ) : echo "" ;else: foreach($menulist as $key=>$val): if($val['id'] == 136): ?>
-                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="edithospital('<?php echo htmlentities($data['id']); ?>','<?php echo htmlentities($data['hospital_name']); ?>','<?php echo htmlentities($data['desc']); ?>')"><?php echo htmlentities($val['title']); ?></button>
-                        <?php endif; if($val['id'] == 137): ?>
-                        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete(<?php echo htmlentities($data['id']); ?>)'><?php echo htmlentities($val['title']); ?></button> <?php endif; ?> 
-                        <?php endforeach; endif; else: echo "" ;endif; ?>
+                        <!-- <?php if(is_array($menulist) || $menulist instanceof \think\Collection || $menulist instanceof \think\Paginator): if( count($menulist)==0 ) : echo "" ;else: foreach($menulist as $key=>$val): if($val['id'] == 136): ?> -->
+                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="edithospital('<?php echo htmlentities($data['id']); ?>','<?php echo htmlentities($data['hospital_name']); ?>','<?php echo htmlentities($data['desc']); ?>')">编辑</button>
+                        <!-- <?php endif; if($val['id'] == 137): ?> -->
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete(<?php echo htmlentities($data['id']); ?>)'>删除</button> <?php endif; ?> 
+                        <!-- <?php endforeach; endif; else: echo "" ;endif; ?> -->
                     </td>
                 </tr>
                 <?php endforeach; endif; else: echo "" ;endif; ?>
@@ -231,7 +231,7 @@
             }
             var field = {};
             field.hospital_name = hospital_name;
-            field.desc = desc;if(data.)
+            field.desc = desc;
             $.ajax({
                 url: "<?php echo url('addhospital'); ?>",
                 data: field,

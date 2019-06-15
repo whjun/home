@@ -1,4 +1,4 @@
-<?php /*a:2:{s:83:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\editequipment.html";i:1560500374;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:83:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\editequipment.html";i:1560577184;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -200,20 +200,22 @@
                 </div>
             </blockquote>
             <blockquote class="layui-elem-quote" style="font-size: 12px;">
+                <?php if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i;?>
                 <label class="layui-form-label" style="width: auto">免费时长：</label>
                 <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="jian()" id="num1">-</button>
                 <div class="layui-input-inline" style="width:auto;">
-                    <input type="text" class="layui-input" style="width:80px" name="free_time" id="num" value="0" placeholder="选择时长" autocomplete="off">
+                    <input type="text" class="layui-input" style="width:80px" name="free_time" id="num" value="<?php echo htmlentities($v['free_time']); ?>" placeholder="选择时长" autocomplete="off">
                 </div>
                 <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="jia()" id="num2">+</button>
                 <span style="margin-right: 120px;">分钟</span>
                 <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
-                    <label class="layui-form-label" style="width: auto">计费金额：</label>
-                    <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="money" id="name" value="" placeholder="金额" autocomplete="off">  
-                    元 / 
-                    <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="minute" id="name" value="" placeholder="时间" autocomplete="off">
-                    <span style="margin-right: 120px;">分钟</span>
+                <label class="layui-form-label" style="width: auto">计费金额：</label>
+                <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="money" id="name" value="<?php if(empty($v['money']) || (($v['money'] instanceof \think\Collection || $v['money'] instanceof \think\Paginator ) && $v['money']->isEmpty())): ?>0<?php endif; ?><?php echo htmlentities($v['money']); ?>" placeholder="金额" autocomplete="off">  
+                元 / 
+                <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="minute" id="name" value="<?php if(empty($v['minute']) || (($v['minute'] instanceof \think\Collection || $v['minute'] instanceof \think\Paginator ) && $v['minute']->isEmpty())): ?>0<?php endif; ?><?php echo htmlentities($v['minute']); ?>" placeholder="时间" autocomplete="off">
+                <span style="margin-right: 120px;">分钟</span>
                 </div>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
             </blockquote>
             <blockquote class="layui-elem-quote" style="font-size: 12px;">
                 <table class="layui-table">
@@ -291,6 +293,7 @@
             $('#valShow').html(parseInt($('#valShow').html()) - 1)
         }
     }
+    //柜门编辑
     function editlock(id,lock_id,lock_name,status) {
         $("input[name='id']").attr('disabled',true).val(id);
         $("input[name='lock_id']").attr('disabled',true).val(lock_id);

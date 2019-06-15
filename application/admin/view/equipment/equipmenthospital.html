@@ -46,11 +46,11 @@
                     <td>{$data.count}</td>
                     <td>{$data.desc}</td>
                     <td>
-                        {foreach name="menulist" item="val"}{if condition="$val.id eq 136"}
-                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="edithospital('{$data.id}','{$data.hospital_name}','{$data.desc}')">{$val.title}</button>
-                        {/if} {if condition = "$val.id eq 137"}
-                        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$data.id})'>{$val.title}</button> {/if} 
-                        {/foreach}
+                        <!-- {foreach name="menulist" item="val"}{if condition="$val.id eq 136"} -->
+                        <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="edithospital('{$data.id}','{$data.hospital_name}','{$data.desc}')">编辑</button>
+                        <!-- {/if} {if condition = "$val.id eq 137"} -->
+                        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick='Delete({$data.id})'>删除</button> {/if} 
+                        <!-- {/foreach} -->
                     </td>
                 </tr>
                 {/volist}
@@ -110,7 +110,7 @@
             }
             var field = {};
             field.hospital_name = hospital_name;
-            field.desc = desc;if(data.)
+            field.desc = desc;
             $.ajax({
                 url: "{:url('addhospital')}",
                 data: field,
