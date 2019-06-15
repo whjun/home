@@ -5,6 +5,7 @@ use think\Db;
 use think\facade\Request;
 use app\common\model\Lock;
 use app\admin\model\EquipmentHospitalModel;
+use app\api\controller\v1\LockApi;
 class Equipment extends Common {
 
     /**
@@ -70,8 +71,9 @@ class Equipment extends Common {
         $re = config('paginate.list_rows');
         $data[] = Db::name('device d') ->where('d.id',$id) -> field('d.id,d.device_id,d.equipment_no,d.equipment_name,d.area_id,h.hospital_name,d.model_num,d.charge_name,d.charge_phone,d.status')->join('hospital h','d.hospital_id = h.id','LEFT') -> order('d.id asc') -> group('d.id') -> find();
         $hospital = Db::name('hospital') -> select();
-        $lock = Db::name('lock') -> where('decice_id',$device_id) ->order('lock_id asc') -> paginate($re, false, array('query' => request() -> param()));
+        $lock = Db::name('lock') -> where('device_id',$id) ->order('lock_num asc') -> paginate($re, false, array('query' => request() -> param()));
         $region = Db::name('admin_region') -> where('pid',0) -> select();
+
         $this -> assign("list",$data);
         $this -> assign("hospital",$hospital);
         $this -> assign('lock',$lock);
@@ -146,7 +148,6 @@ class Equipment extends Common {
                 if(!$lock_data){
                     throw new \Exception('修改失败!');
                 }
-                
                 Db::commit(); //提交事务
             } catch (\PDOException $e) {
                Db::rollback(); //回滚事务
@@ -159,11 +160,38 @@ class Equipment extends Common {
      */
     public function equipmentfault(){
         Cookie('Fault', request() -> url());
+        $re = config('paginate.list_rows');
         $hospital = Db::name('hospital') -> select();
         $region = Db::name('admin_region') -> where('pid',0) -> select();
+        $lock = Db::name('lock') -> select();
+        $device = Db::name('device') -> select();
+        $data = Db::name('fault f') -> field('f.id,f.fault_cause,f.fault_desc,f.create_time,f.user_name,f.oddnumbers,f.tel,f.status,h.hospital_name,d.equipment_no,d.charge_name,d.charge_phone,l.lock_name,r.name') -> join('device d', 'f.d_id = d.id',"LEFT") -> join('hospital h', 'd.hospital_id = h.id','LEFT') -> join('lock l','f.lock_id = l.id','LEFT') -> join('admin_region r','f.region_id = r.id','LEFT') -> order('f.id asc') -> paginate($re, false, array('query' => request() -> param()));
+        $this -> assign('list',$data);
+        $this -> assign('device',$device);
+        $this -> assign("lock",$lock);
         $this -> assign('region',$region);
         $this -> assign('hospital',$hospital);
         return $this -> fetch();
+    }
+    /**
+     * 添加维修记录
+     * @return void
+     */
+    public function addfault() {
+        $data = input('post.');
+        $datatime = date('Y-m-d h:i:s');
+        $oddnumbers = date('YmdHis') . rand(10000000,99999999);
+        $fault = [
+            'region_id' => $data['data3'],
+            'd_id' => $data['equipment_no'],
+            'lock_id' => $data['lock_num'],
+            'fault_cause' => $data['fault_cause'],
+            'fault_desc' => $data['desc'],
+            'create_time' => $datatime,
+            'oddnumbers' => $oddnumbers,
+        ];
+        $res = Db::name('fault') -> insert($fault);
+        dump($res);
     }
     /**
      * 医院管理

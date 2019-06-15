@@ -12,4 +12,11 @@ namespace app\common\model;
 class Device extends BaseModel
 {
     protected $name = 'device';
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
 }

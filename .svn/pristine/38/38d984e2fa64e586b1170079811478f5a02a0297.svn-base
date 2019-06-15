@@ -1,0 +1,38 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: wangjinzeng
+ * Date: 2019/6/12
+ * Time: 9:26
+ */
+
+namespace app\api\controller\v1;
+
+
+use app\common\model\User;
+use think\App;
+
+class Index extends BaseController
+{
+    public function __construct(App $app = null)
+    {
+        parent::__construct($app);
+        $this->userModel = new User();
+    }
+
+    public function index()
+    {
+//        $userinfo = $this->userModel
+    }
+
+    /**
+     * 租借
+     */
+    public function lease()
+    {
+
+
+    }
+
+
+}

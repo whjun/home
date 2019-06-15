@@ -1,4 +1,4 @@
-<?php /*a:2:{s:83:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\editequipment.html";i:1560481383;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:83:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\editequipment.html";i:1560500374;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -228,16 +228,16 @@
                     <tbody style="background-color: #f2f2f2;">
                         <?php if(is_array($lock) || $lock instanceof \think\Collection || $lock instanceof \think\Paginator): if( count($lock)==0 ) : echo "" ;else: foreach($lock as $key=>$val): ?>
                         <tr style="background-color: #f2f2f2;">
-                            <input type="hidden" name="lock_id[]" value="<?php echo htmlentities($val['lock_id']); ?>">
+                            <input type="hidden" name="lock_id[]" value="<?php echo htmlentities($val['lock_num']); ?>">
                             <input type="hidden" name="l_id[]" value="<?php echo htmlentities($val['id']); ?>">
-                            <td><?php echo htmlentities($val['lock_id']); ?></td>
+                            <td><?php echo htmlentities($val['lock_num']); ?></td>
                             <td style="width: 400px;background-color: white;"><input type="text" name="lock_name[]" style="width: 400px;border: snow;height: 38px;" value="<?php echo htmlentities($val['lock_name']); ?>" placeholder="请输入设备名称"></td>
                             <td>
                                 <?php switch($val['status']): case "1": ?><span>借出</span><?php break; case "2": ?><span>未借出</span><?php break; case "3": ?><span style="color: red">损坏</span><?php break; case "4": ?><span style="color: red">闲置</span><?php break; default: ?>/
                                 <?php endswitch; ?></td>
                             <td>
-                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="editlock('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['lock_id']); ?>','<?php echo htmlentities($val['lock_name']); ?>','<?php echo htmlentities($val['status']); ?>')">编辑</button>
-                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="opendoor('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['lock_id']); ?>','<?php echo htmlentities($val['lock_name']); ?>','<?php echo htmlentities($val['status']); ?>')">开门</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="editlock('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['lock_num']); ?>','<?php echo htmlentities($val['lock_name']); ?>','<?php echo htmlentities($val['status']); ?>')">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="opendoor('<?php echo htmlentities($val['id']); ?>','<?php echo htmlentities($val['lock_num']); ?>','<?php echo htmlentities($val['lock_name']); ?>','<?php echo htmlentities($val['status']); ?>')">开门</button>
                             </td>
                         </tr>
                         <?php endforeach; endif; else: echo "" ;endif; ?>
@@ -246,7 +246,7 @@
             </blockquote>
             <center>
                     <button type="submit" style="width: 150px;" class="layui-btn layui-btn-normal">保存</button>
-                    <a href="<?php echo url('equipmentlist'); ?>"></a><button type="button" style="width: 150px;" class="layui-btn layui-btn-primary">取消</button></a>
+                    <a href="<?php echo url('equipmentlist'); ?>"><button type="button" style="width: 150px;" class="layui-btn layui-btn-primary">取消</button></a>
             </center>
         </form>
         <div class="layui-form-item" id="lock" style="display: none;margin-top: 25px;margin-bottom: 207px;">

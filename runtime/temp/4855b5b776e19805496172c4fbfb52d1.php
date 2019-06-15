@@ -1,4 +1,4 @@
-<?php /*a:2:{s:84:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmentfault.html";i:1560484663;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
+<?php /*a:2:{s:84:"E:\phpstudy\PHPTutorial\WWW\PHP\application\admin\view\equipment\equipmentfault.html";i:1560507721;s:26:"./admin-layout/header.html";i:1559631735;}*/ ?>
 <!DOCTYPE HTML>
 <html>
 
@@ -125,6 +125,15 @@
         width: auto;
     }
     a{text-decoration:none}
+    #c{
+    /* margin-left: 490px; */
+    position: absolute;
+    margin-top: -387px;
+    /* margin-top: -11px; */
+    }
+    .layui-layer-page .layui-layer-content{
+        overflow: unset;
+    }
 </style>
 <div class="admin-main">
     <div class="layui-form">
@@ -190,49 +199,105 @@
                 </tr> 
             </thead>
             <tbody>
+                <?php if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i;?>
                 <tr style="height: 70px">
                     <td colspan="11">
-                        <span>保修单号：1009201804041298</span>
-                        <span style="margin-left: 97px;color: gray;">2019-04-04 12：12：12</span>
-                        <span style="float: right;margin-right: 10px;">报修处理中</span>
+                        <span>保修单号：<?php echo htmlentities($v['oddnumbers']); ?></span>
+                        <span style="margin-left: 97px;color: gray;"><?php echo htmlentities($v['create_time']); ?></span>
+                        <span style="float: right;margin-right: 10px;">
+                            <?php if($v['status'] == 0): ?>
+                            <span style="color: red">保修处理中</span>
+                            <?php endif; if($v['status'] == 1): ?>
+                            <span>处理完成</span>
+                            <?php endif; ?>
+                        </span>
                     </td>
                 </tr>
                 <tr style="height: 70px">
-                    <td>沂水人民医院</td>
-                    <td>1009201804041298</td>
-                    <td>山东省临沂市沂水县</td>
-                    <td>沂水人民医院一楼1号柜门</td>
-                    <td>无法开门</td>
-                    <td>归还时柜门没有打开，无法关闭</td>
-                    <td>小红</td>
-                    <td>1566666666</td>
-                    <td>周二</td>
-                    <td>15666666666</td>
-                    <td>处理完成</td>
+                    <td><?php echo htmlentities($v['hospital_name']); ?></td>
+                    <td><?php echo htmlentities($v['equipment_no']); ?></td>
+                    <td><?php echo htmlentities($v['name']); ?></td>
+                    <td><?php echo htmlentities($v['lock_name']); ?></td>
+                    <td>
+                        <?php if($v['fault_cause'] == 1): ?>
+                        开锁失败
+                        <?php endif; if($v['fault_cause'] == 2): ?>
+                        开门失败
+                        <?php endif; if($v['fault_cause'] == 3): ?>
+                        物品损坏
+                        <?php endif; if($v['fault_cause'] == 4): ?>
+                        关门失败
+                        <?php endif; ?>
+                    </td>
+                    <td><?php echo htmlentities($v['fault_desc']); ?></td>
+                    <td><?php if(empty($v['user_name']) || (($v['user_name'] instanceof \think\Collection || $v['user_name'] instanceof \think\Paginator ) && $v['user_name']->isEmpty())): ?>\<?php endif; ?><?php echo htmlentities($v['user_name']); ?></td>
+                    <td><?php if(empty($v['tel']) || (($v['tel'] instanceof \think\Collection || $v['tel'] instanceof \think\Paginator ) && $v['tel']->isEmpty())): ?>\<?php endif; ?><?php echo htmlentities($v['tel']); ?></td>
+                    <td><?php echo htmlentities($v['charge_name']); ?></td>
+                    <td><?php echo htmlentities($v['charge_phone']); ?></td>
+                    <td>
+                        <?php if($v['status'] == 0): ?>
+                        <span style="color: #b3aeae">处理完成</span>
+                        <?php endif; if($v['status'] == 1): ?>
+                        <a href="<?php echo url('editfaultstatus',['id'=>$v['id'],'id'=>$v['status']]); ?>">处理完成</a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
             </tbody>
         </table>
-        <div id="fault" style="display: none">
-            <label class="layui-form-label">设备地区</label>
+        <div id="fault" style="display: none;">
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" style="width:200px" name="filter" id="city" value="" placeholder="请选择省市区" autocomplete="off">
+                <label class="layui-form-label">设备地区</label>
+                <input type="text" class="layui-input" style="width: 328px;margin-left: 14px;" name="filter" id="city" value="" placeholder="请选择省市区" autocomplete="off">
             </div>
-        </div>
-        <div style="display: none;" id="c">
-            <div class="layui-input-inline" id="div">
-                <select name="data1" lay-filter="data1">
-                    <?php if(is_array($region) || $region instanceof \think\Collection || $region instanceof \think\Paginator): if( count($region)==0 ) : echo "" ;else: foreach($region as $key=>$vo): ?>
-                        <option value="<?php echo htmlentities($vo['id']); ?>" ><?php echo htmlentities($vo['name']); ?></option>
+            <label class="layui-form-label">设备编号</label>
+            <div class="layui-input-inline" style="width: 328px;margin-left: 14px;">
+                    <select name="equipment_no">
+                        <option value="">选择设备编号</option>
+                        <?php if(is_array($device) || $device instanceof \think\Collection || $device instanceof \think\Paginator): if( count($device)==0 ) : echo "" ;else: foreach($device as $key=>$vo): ?>
+                        <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['equipment_no']); ?></option>
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
+                    </select>
+                </div>
+            <label class="layui-form-label">柜门编号</label>
+            <div class="layui-input-inline" style="width: 328px;margin-left: 14px;">
+                <select name="lock_num">
+                    <option value="">选择问题柜门编号</option>
+                    <?php if(is_array($lock) || $lock instanceof \think\Collection || $lock instanceof \think\Paginator): if( count($lock)==0 ) : echo "" ;else: foreach($lock as $key=>$vo): ?>
+                    <option value="<?php echo htmlentities($vo['id']); ?>"><?php echo htmlentities($vo['lock_num']); ?>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<?php echo htmlentities($vo['lock_name']); ?></option>
                     <?php endforeach; endif; else: echo "" ;endif; ?>
                 </select>
             </div>
-            <div class="layui-input-inline" id="div1" style="display: none;">
-                <select lay-filter="data2" name="data2" id="select2">
+            <label class="layui-form-label">保修类型</label>
+            <div class="layui-input-inline" style="width: 328px;margin-left: 14px;">
+                <select name="fault_cause">
+                    <option value="">请选择保修类型</option>
+                    <option value="1">开锁失败</option>
+                    <option value="2">开门失败</option>
+                    <option value="3">物品损坏</option>
+                    <option value="4">关门失败</option>
                 </select>
             </div>
-            <div class="layui-input-inline" id="div2" style="display: none;">
-                <select lay-filter="data3" name="select3" id="select3">
-                </select>
+            <label class="layui-form-label">故障描述</label>
+            <div class="layui-input-inline" style="width: 328px;margin-left: 14px;">
+                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+            <div style="display: none;" id="c">
+                <div class="layui-input-inline" id="div" style="width: 100px;margin-left: 14px;">
+                    <select name="data1" lay-filter="data1">
+                        <?php if(is_array($region) || $region instanceof \think\Collection || $region instanceof \think\Paginator): if( count($region)==0 ) : echo "" ;else: foreach($region as $key=>$vo): ?>
+                            <option value="<?php echo htmlentities($vo['id']); ?>" ><?php echo htmlentities($vo['name']); ?></option>
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
+                    </select>
+                </div>
+                <div class="layui-input-inline" id="div1" style="display: none;width: 100px;margin-left: 0px;">
+                    <select lay-filter="data2" name="data2" id="select2">
+                    </select>
+                </div>
+                <div class="layui-input-inline" id="div2" style="display: none;width: 100px;margin-left: 0px;">
+                    <select lay-filter="data3" name="select3" id="select3">
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -253,7 +318,7 @@
         layer.open({
         type: 1
         ,title: '新增/编辑'
-        ,area: ['450px', '500px']
+        ,area: ['360px', '600px']
         ,shade: 0
         ,content: $('#fault')
         ,btn: ['确定', '取消']
@@ -261,12 +326,27 @@
         ,btnAlign: 'c'
         ,skin: 'open_class'
         ,yes: function(layero, index){
+            var data1 = $("select[name='data1']").val();
+            var data2 = $("select[name='data2']").val();
+            var data3 = $("select[name='select3']").val();
+            var equipment_no = $("select[name='equipment_no']").val();
+            var lock_num = $("select[name='lock_num']").val();
+            var fault_cause = $("select[name='fault_cause']").val();
+            var desc = $("textarea[name='desc']").val();
+            var field = {};
+            field.data1 = data1;
+            field.data2 = data2;
+            field.data3 = data3;
+            field.equipment_no = equipment_no;
+            field.lock_num = lock_num;
+            field.fault_cause = fault_cause;
+            field.desc = desc;
             $.ajax({
-                url: "<?php echo url('addhospital'); ?>",
+                url: "<?php echo url('addfault'); ?>",
                 data: field,
                 type: "POST"
             }).done(function(data) {
-                
+                console.log(data);return;
                 if(data.result == 0){
                     layer.msg(data.message, {
                         icon: 1,
@@ -289,4 +369,95 @@
         }
         });
     }
+    $("#city").on('click',function(){
+        $('#c').show();
+        // console.log($('#city').val().length);
+        // if($('#city').val().length == 0){
+        //     $("#city").removeAttr(disabled);
+        // }else{
+        //     $("#city").attr('disabled',"disabled");
+        // }
+    })
+    $("#city").bind("input propertychange",function(){
+        if($(this).val() == ''){
+            $('#c').show();
+        }
+    });
+    layui.use('form', function() {
+        var form = layui.form;
+        form.render('select');
+        var top_id = '';
+        var province_name = ''; //定义 省
+        var city_name = '';
+        var area_name = '';
+        //下拉选择：省/市
+        form.on('select(data1)', function(data) {
+            top_id = data.value;
+            var idea = 1;
+            province_name = data.elem[data.elem.selectedIndex].text
+            $("#div1").show();
+            //alert(hosid);
+            $.ajax({
+                url : "<?php echo url('region'); ?>",
+                data : {top_id:top_id,idea:idea},
+                dataType : "json",
+                success : function(d) {
+                    console.log(d);
+                    var tmp = '<option value="">--请选择--</option>';
+                    //改变第三级下拉框回复原样
+                    $("#select2").html(tmp);
+                    $("#select3").html(tmp);
+                    for ( var i in d) {
+                        tmp += '<option value="'+d[i].id+'">' + d[i].name + '</option>';
+                    }
+                    $("#select2").html(tmp);
+                    form.render();
+                },
+                error:function(){
+                    layer.alert('请求失败，稍后再试', {icon: 5});
+                }
+
+            });
+        });
+
+        //下拉选择：市/区
+        form.on('select(data2)', function(data) {
+            var id   = data.value;
+            second_id = id;
+            var idea = 2;
+            city_name = data.elem[data.elem.selectedIndex].text
+            $("#div2").show();
+
+            $.ajax({
+                url : "<?php echo url('region'); ?>",
+                data : {top_id:top_id,id:id,idea:idea},
+                dataType : "json",
+                success : function(d) {
+                    var tmp = '<option value="">--请选择--</option>';
+                    //改变第三级下拉框回复原样
+                    $("#select3").html(tmp);
+                    for ( var i in d) {
+                        tmp += '<option value="'+d[i].id+'">' + d[i].name + '</option>';
+                    }
+                    $("#select3").html(tmp);
+                    form.render();
+                },
+                error:function(){
+                    layer.alert('请求失败，稍后再试', {icon: 5});
+                }
+
+            });
+        });
+
+        //下拉选择：乡/镇
+        form.on('select(data3)', function(data) {
+            area_name = data.elem[data.elem.selectedIndex].text
+            area_id = data.value;
+            $("#city").val(province_name+'/'+city_name+'/'+area_name)
+            $("#city").show();
+            $("#c").hide();
+            
+        });
+        
+    });
     </script>

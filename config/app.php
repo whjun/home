@@ -149,5 +149,8 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
-
+    //微信appid
+    'appid'=>'wxcb5d7c349acdb70a',
+    //密钥
+    'appsecret'=>'d67a73b0af2c17bd04feda1f05a497e8'
 ];

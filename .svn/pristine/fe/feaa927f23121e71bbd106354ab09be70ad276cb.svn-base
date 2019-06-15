@@ -1,0 +1,338 @@
+{include file="./admin-layout/header.html" /}
+<style>
+#c{
+    margin-left: 490px;
+    position: absolute;
+    margin-top: -11px;
+}
+</style>
+<div class="admin-main">
+    <div class="layui-form">
+        <form method="get" action="{:url('edite')}">
+            <blockquote class="layui-elem-quote" style="font-size: 12px;">
+                <div class="layui-form-item" style="margin-bottom: 0px;">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>设备编号</th>
+                                <th>设备名称</th>
+                                <th>设备地区</th>
+                                <th>所属医院</th>
+                                <th>柜门数量</th>
+                                <th>负责人</th>
+                                <th>负责人电话</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background-color: #f1f1f1;">
+                            {volist name='list' id='v'}
+                            <tr>
+                                <input type="hidden" value="{$v.device_id}" name="device_id">
+                                <input type="hidden" value="{$v.id}" name="d_id">
+                                <td>{$v.equipment_no}</td>
+                                <td style="width: 200px;background: white;"><input type="text" name="equipment_name" style="width: 200px; height: 24px;border: snow;" value="{$v.equipment_name}"></td>
+                                <td style="width: 250px;background-color: white;">
+                                    <input type="text" style="display: none" placeholder="请选择省市区" style="width: 250px;height: 24px;border: snow;">
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" style="width:200px" name="filter" id="city" value="" placeholder="请选择省市区" autocomplete="off">
+                                    </div>
+                                </td>
+                                <td style="width: 200px;background: white;">
+                                    <select name="hospital" id="" style="width: 24px">
+                                        <option value="">请选择所属医院</option>
+                                        {foreach name="hospital" item="vo"}
+                                        <option value="{$vo.id}">{$vo.hospital_name}</option>
+                                        {/foreach}
+                                    </select>
+                                </td>
+                                <td>{$v.model_num}</td>
+                                <td style="width: 200px;background: white;"><input type="text" name="charge_name" value="{$v.charge_name}" style="width: 200px; height: 24px;border: snow;"></td>
+                                <td style="width: 200px;background: white;"><input type="text" name="charge_phone" value="{$v.charge_phone}" style="width: 200px; height: 24px;border: snow;"></td>
+                                <td>
+                                    {if condition="$v.status eq 1"}
+                                    正常
+                                    {/if}{if condition="$v.status eq 2"}
+                                    不正常
+                                    {/if}
+                                </td>
+                            </tr>
+                            {/volist}
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display: none;" id="c">
+                    <div class="layui-input-inline" id="div">
+                        <select name="data1" lay-filter="data1">
+                            {foreach name="region" item="vo"}
+                                <option value="{$vo.id}" >{$vo.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" id="div1" style="display: none;">
+                        <select lay-filter="data2" name="data2" id="select2">
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" id="div2" style="display: none;">
+                        <select lay-filter="data3" name="select3" id="select3">
+                        </select>
+                    </div>
+                </div>
+            </blockquote>
+            <blockquote class="layui-elem-quote" style="font-size: 12px;">
+                <label class="layui-form-label" style="width: auto">免费时长：</label>
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="jian()" id="num1">-</button>
+                <div class="layui-input-inline" style="width:auto;">
+                    <input type="text" class="layui-input" style="width:80px" name="free_time" id="num" value="0" placeholder="选择时长" autocomplete="off">
+                </div>
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="jia()" id="num2">+</button>
+                <span style="margin-right: 120px;">分钟</span>
+                <div class="layui-input-inline" style="width:auto;margin-right: 90px;">
+                    <label class="layui-form-label" style="width: auto">计费金额：</label>
+                    <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="money" id="name" value="" placeholder="金额" autocomplete="off">  
+                    元 / 
+                    <input type="text" style="width: 80px;display: inline;" class="layui-input" style="width:200px" name="minute" id="name" value="" placeholder="时间" autocomplete="off">
+                    <span style="margin-right: 120px;">分钟</span>
+                </div>
+            </blockquote>
+            <blockquote class="layui-elem-quote" style="font-size: 12px;">
+                <table class="layui-table">
+                    <thead>
+                        <tr style="height: 57px;">
+                            <th>柜门编号</th>
+                            <th>柜门名称</th>
+                            <th>柜门状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background-color: #f2f2f2;">
+                        {foreach name="lock" item="val"}
+                        <tr style="background-color: #f2f2f2;">
+                            <input type="hidden" name="lock_id[]" value="{$val.lock_num}">
+                            <input type="hidden" name="l_id[]" value="{$val.id}">
+                            <td>{$val.lock_num}</td>
+                            <td style="width: 400px;background-color: white;"><input type="text" name="lock_name[]" style="width: 400px;border: snow;height: 38px;" value="{$val.lock_name}" placeholder="请输入设备名称"></td>
+                            <td>
+                                {switch name="$val.status" }
+                                    {case value="1"}<span>借出</span>{/case}
+                                    {case value="2"}<span>未借出</span>{/case}
+                                    {case value="3"}<span style="color: red">损坏</span>{/case}
+                                    {case value="4"}<span style="color: red">闲置</span>{/case}
+                                    {default /}/
+                                {/switch}</td>
+                            <td>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="editlock('{$val.id}','{$val.lock_num}','{$val.lock_name}','{$val.status}')">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="opendoor('{$val.id}','{$val.lock_num}','{$val.lock_name}','{$val.status}')">开门</button>
+                            </td>
+                        </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+            </blockquote>
+            <center>
+                    <button type="submit" style="width: 150px;" class="layui-btn layui-btn-normal">保存</button>
+                    <a href="{:url('equipmentlist')}"><button type="button" style="width: 150px;" class="layui-btn layui-btn-primary">取消</button></a>
+            </center>
+        </form>
+        <div class="layui-form-item" id="lock" style="display: none;margin-top: 25px;margin-bottom: 207px;">
+            <input type="hidden" name="id" value="">
+            <input type="hidden" name="lock_id" value="">
+            <div class="layui-input-inline" style="width:auto;">
+                <label class="layui-form-label" style="width: auto;margin-left: 25px;">柜门名称</label>
+                <input type="text" style="width: 254px;margin-left: 13px;" class="layui-input" name="lock_name" id="name" value="" placeholder="请输入柜门名称" autocomplete="off">
+            </div>
+            <div class="layui-input-inline" style="width:auto;margin-top: 20px;">
+                <label class="layui-form-label" style="width: auto;margin-left: -4px;">选择柜门状态</label>
+                <div class="layui-input-block" style="width: 121px;">
+                    <select name="status" lay-verify="">
+                        <option value="1">借出</option>
+                        <option value="2">未借出</option>
+                        <option value="3">维修中</option>
+                        <option value="4">闲置</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#city").on('click',function(){
+        $('#c').show();
+    })
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+        layer.msg(JSON.stringify(data.field));
+        return false;
+        });
+    });
+    function FN(btnType) {
+        if (btnType == 'plus') {
+            $('#valShow').html(parseInt($('#valShow').html()) + 1)
+        } else if (btnType == 'minus') {
+            $('#valShow').html(parseInt($('#valShow').html()) - 1)
+        }
+    }
+    function editlock(id,lock_id,lock_name,status) {
+        $("input[name='id']").attr('disabled',true).val(id);
+        $("input[name='lock_id']").attr('disabled',true).val(lock_id);
+        $("input[name='lock_name']").val(lock_name);
+        $("input[name='status']").val(status);
+        layer.open({
+        type: 1
+        ,title: '编辑'
+        ,area: ['400px', '500px']
+        ,shade: 0
+        ,content: $('#lock')
+        ,btn: ['确定', '取消']
+        ,shade :0.8
+        ,btnAlign: 'c'
+        ,skin: 'open_class'
+        ,yes: function(layero, index){
+            var id = $("input[name='id']").val();
+            var lock_id = $("input[name='lock_id']").val();
+            var lock_name = $("input[name='lock_name']").val();
+            var status = $("select[name='status']").val();
+            if(!lock_name){
+                layer.msg('请输入柜门名称');
+                return false;
+            }
+            if(!status){
+                layer.msg("请选择柜门状态");
+                return false;
+            }
+            var field = {};
+            field.id = id;
+            field.lock_id = lock_id;
+            field.lock_name = lock_name;
+            field.status = status;
+            $.ajax({
+                url: "{:url('editlock')}",
+                data: field,
+                type: "POST"
+            }).done(function(data) {
+                console.log(data);
+                if(data.result == 0){
+                    layer.msg(data.message, {
+                        icon: 1,
+                        time: 3000
+                    },function(){
+                        location.href = data.url;
+                    });
+                }else{
+                    layer.msg(data.message, {
+                        icon: 2,
+                        time: 3000
+                    });
+                }
+            }).error(function(data) {
+                layer.msg('错误', {
+                    icon: 2,
+                    content: '服务器错误'
+                })
+            })
+        }
+      });
+    }
+    //数字减
+    function jian(){
+        var num = $("#num").val();
+        var num1 = parseInt(num) - 1;
+        $("#num").val(num1);
+    }
+    //数字加
+    function jia(){
+        var num = $("#num").val();
+        var num1 = parseInt(num) + 1;
+        $("#num").val(num1);
+    }
+    //地区三级联动
+    $("#city").bind("input propertychange",function(){
+        if($(this).val() == ''){
+            // $("#city").hide();
+            $('#c').show();
+            // $("#div1").hide();
+            // $("#div2").hide();
+        }
+        console.log($(this).val());
+        
+    });
+    layui.use('form', function() {
+        var form = layui.form;
+        form.render('select');
+        var top_id = '';
+        var province_name = ''; //定义 省
+        var city_name = '';
+        var area_name = '';
+        //下拉选择：省/市
+        form.on('select(data1)', function(data) {
+            top_id = data.value;
+            var idea = 1;
+            province_name = data.elem[data.elem.selectedIndex].text
+            $("#div1").show();
+            //alert(hosid);
+            $.ajax({
+                url : "{:url('region')}",
+                data : {top_id:top_id,idea:idea},
+                dataType : "json",
+                success : function(d) {
+                    console.log(d);
+                    var tmp = '<option value="">--请选择--</option>';
+                    //改变第三级下拉框回复原样
+                    $("#select2").html(tmp);
+                    $("#select3").html(tmp);
+                    for ( var i in d) {
+                        tmp += '<option value="'+d[i].id+'">' + d[i].name + '</option>';
+                    }
+                    $("#select2").html(tmp);
+                    form.render();
+                },
+                error:function(){
+                    layer.alert('请求失败，稍后再试', {icon: 5});
+                }
+
+            });
+        });
+
+        //下拉选择：市/区
+        form.on('select(data2)', function(data) {
+            var id   = data.value;
+            second_id = id;
+            var idea = 2;
+            city_name = data.elem[data.elem.selectedIndex].text
+            $("#div2").show();
+
+            $.ajax({
+                url : "{:url('region')}",
+                data : {top_id:top_id,id:id,idea:idea},
+                dataType : "json",
+                success : function(d) {
+                    var tmp = '<option value="">--请选择--</option>';
+                    //改变第三级下拉框回复原样
+                    $("#select3").html(tmp);
+                    for ( var i in d) {
+                        tmp += '<option value="'+d[i].id+'">' + d[i].name + '</option>';
+                    }
+                    $("#select3").html(tmp);
+                    form.render();
+                },
+                error:function(){
+                    layer.alert('请求失败，稍后再试', {icon: 5});
+                }
+
+            });
+        });
+
+        //下拉选择：乡/镇
+        form.on('select(data3)', function(data) {
+            area_name = data.elem[data.elem.selectedIndex].text
+            area_id = data.value;
+            $("#city").val(province_name+'/'+city_name+'/'+area_name)
+            $("#city").show();
+            $("#c").hide();
+        });
+        
+    });
+</script>
